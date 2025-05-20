@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+
 import 'package:weather/src/main_page.dart';
+import 'package:provider/provider.dart';
+import 'data/weather_provider.dart';
+import 'sample_screen.dart';
+
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => WeatherProvider(),
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -10,8 +20,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: MainPage()
+
     );
     
   }
