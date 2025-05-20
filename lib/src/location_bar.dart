@@ -77,6 +77,19 @@ class LocationProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+  void deleteLocation(LocationCoords location) {
+    if (_savedLocations.length <= 1) {
+      return;
+    }
+    _savedLocations.remove(location);
+    // If we're deleting the current location, set the first saved location as current
+    if (_currentLocation == location && _savedLocations.isNotEmpty) {
+      _currentLocation = _savedLocations.first;
+      _weatherProvider.fetchWeather(_currentLocation.latitude, _currentLocation.longitude);
+    }
+    notifyListeners();
+  }
 }
 
 class LocationBar extends StatelessWidget {
@@ -125,7 +138,45 @@ class LocationBar extends StatelessWidget {
                   // Saved locations
                   ...locationProvider.savedLocations.map((location) => PopupMenuItem(
                     value: location,
-                    child: Text(location.name),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            location.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 20),
+                          onPressed: () {
+                            // Show confirmation dialog
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Delete Location'),
+                                content: Text('Are you sure you want to delete ${location.name}?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      locationProvider.deleteLocation(location);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context); 
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   )),
                 ],
                 onSelected: (LocationCoords? value) {

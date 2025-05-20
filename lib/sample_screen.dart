@@ -59,7 +59,14 @@ class _SampleScreenState extends State<SampleScreen> {
                     children: [
                       // Remove the latitude/longitude input fields since we're using LocationBar
                       const SizedBox(height: 32),
-                      
+                      Text(
+                        'Location: ${locationProvider.currentLocation.latitude.toStringAsFixed(4)}°N, ${locationProvider.currentLocation.longitude.toStringAsFixed(4)}°E',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                
                       // Current weather
                       if (currentWeather != null)
                         Column(
@@ -81,14 +88,6 @@ class _SampleScreenState extends State<SampleScreen> {
                                     ],
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Location: ${locationProvider.currentLocation.latitude.toStringAsFixed(4)}°N, ${locationProvider.currentLocation.longitude.toStringAsFixed(4)}°E',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
                               ),
                             ),
                           ],
