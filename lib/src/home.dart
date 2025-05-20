@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/weather_provider.dart';
+import 'location_bar.dart';
 
 const List<String> locations = <String>[
   'CAMBRIDGE',
@@ -32,27 +33,24 @@ class _HomeScreenState extends State<HomeScreen> {
     final weatherData = weatherProvider.weatherData;
     final weatherService = weatherProvider.weatherService;
 
-    var currentWeather = weatherData != null 
-      ? weatherService.getCurrentWeather(weatherData)
-      : null;
-    var dailyWeather = weatherData != null 
-      ? weatherService.getDailyWeather(weatherData)
-      : null;
+    final currentLocation = Provider.of<LocationProvider>(context).currentLocation;
 
-    currentWeather ??= {
+    final currentWeather = weatherData != null 
+      ? weatherService.getCurrentWeather(weatherData)
+      : {
         "temperature": 15,
         "windSpeed": 13,
         "windDirection": "SSE",
       };
 
-    dailyWeather ??= [
-      {
-        "maxTemperature": 20,
-        "minTemperature": 10,
-      }
-    ];
+    final dailyWeather = weatherData != null 
+      ? weatherService.getDailyWeather(weatherData)
+      : [{
+          "maxTemperature": 20,
+          "minTemperature": 10,
+      }];
 
-    var windCat = switch (currentWeather?["windSpeed"]) {
+    var windCat = switch (currentWeather["windSpeed"]) {
       >= 0 && < 7 => "still",
       >= 7 && < 13 => "calm",
       >= 13 && < 19 => "modest",
@@ -64,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     };
 
     double getWindDirRadians() {
-      return (windDirMap[currentWeather?["windDirection"]] ?? 0) * (3.14 / 180);
+      return (windDirMap[currentWeather["windDirection"]] ?? 0) * (3.14 / 180);
     }
 
     if (cycleMode) {
@@ -72,7 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           leading: Icon(Icons.warning, color: Colors.transparent),
           title: Center(
-            child: Text("CAMBRIDGE")
+            child: Text(
+              currentLocation.name, style: TextStyle(color: Colors.black)
+            ),
           ),
           actions: [
             IconButton(
@@ -90,10 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${currentWeather?["temperature"]}°C",
+                "${currentWeather["temperature"]}°C",
                 style: TextStyle(color: Colors.black, fontSize: 100),
               ),
-              Text("$windCat WINDS, ${currentWeather?["windDirection"]}", style: TextStyle(fontSize: 40)),
+              Text("$windCat WINDS, ${currentWeather["windDirection"]}", style: TextStyle(fontSize: 40)),
               SizedBox(height: 30),
               Icon(
                 Icons.directions_bike,
@@ -125,28 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           ),
         title: Center(
-          child: DropdownButton<String>(
-            value: location,
-            icon: const Icon(Icons.arrow_drop_down),
-            elevation: 16,
-            style: const TextStyle(color: Colors.black, fontSize: 20),
-            underline: Container(
-              height: 2,
-              color: Colors.white,
-            ),
-            onChanged: (String? newValue) {
-              setState(() {
-                location = newValue!;
-              });
-            },
-            items: <String>['CAMBRIDGE', '$cycleMode', 'NEW YORK']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          )
+          child: LocationBar()
         ),
         actions: [
           IconButton(
@@ -172,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.yellow,
                 ),
                 Text(
-                  "${currentWeather?["temperature"]}°C",
+                  "${currentWeather["temperature"]}°C",
                   style: TextStyle(color: Colors.black, fontSize: 36),
                 )
               ]
@@ -190,12 +169,12 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "HI: ${dailyWeather?[0]["maxTemperature"].round()}°C",
+                  "HI: ${dailyWeather[0]["maxTemperature"].round()}°C",
                   style: TextStyle(color: Colors.black, fontSize: 18),
                 ),
                 SizedBox(width: 20),
                 Text(
-                  "LO: ${dailyWeather?[0]["minTemperature"].round()}°C",
+                  "LO: ${dailyWeather[0]["minTemperature"].round()}°C",
                   style: TextStyle(color: Colors.black, fontSize: 18),
                 )
               ],
@@ -223,13 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text((currentWeather?["windSpeed"]).toString(), style: TextStyle(fontSize: 24)),
+                                Text((currentWeather["windSpeed"]).toString(), style: TextStyle(fontSize: 24)),
                                 Text("km/h"),
                               ],
                             ),
                           ],
                         ),
-                        Text("$windCat WINDS, ${currentWeather?["windDirection"]}", style: TextStyle(fontSize: 10)),
+                        Text("$windCat WINDS, ${currentWeather["windDirection"]}", style: TextStyle(fontSize: 10)),
                       ],
                     ),
                   )

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'src/home.dart';
-
 import 'package:weather/src/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
@@ -33,7 +31,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const SampleScreen(),
+      home: const MainPage(),
     );
   }
 }

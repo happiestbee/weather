@@ -99,96 +99,93 @@ class LocationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<LocationProvider>(
       builder: (context, locationProvider, child) {
-        return Container(
-          padding: const EdgeInsets.only(top: 60),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Location icon
-              const Icon(Icons.location_on, size: 20),
-              const SizedBox(width: 8),
-              // Location text with dropdown
-              PopupMenuButton<LocationCoords>(
-                offset: const Offset(0, 40),
-                child: Row(
-                  children: [
-                    Text(
-                      locationProvider.currentLocation.name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const Icon(Icons.arrow_drop_down),
-                  ],
-                ),
-                itemBuilder: (context) => [
-                  // Add new location option
-                  const PopupMenuItem(
-                    value: LocationCoords(name: 'add_new', latitude: 0, longitude: 0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.add),
-                        SizedBox(width: 8),
-                        Text('Add New Location'),
-                      ],
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Location icon
+            const Icon(Icons.location_on, size: 20),
+            const SizedBox(width: 8),
+            // Location text with dropdown
+            PopupMenuButton<LocationCoords>(
+              offset: const Offset(0, 40),
+              child: Row(
+                children: [
+                  Text(
+                    locationProvider.currentLocation.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const PopupMenuDivider(),
-                  // Saved locations
-                  ...locationProvider.savedLocations.map((location) => PopupMenuItem(
-                    value: location,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            location.name,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline, size: 20),
-                          onPressed: () {
-                            // Show confirmation dialog
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Delete Location'),
-                                content: Text('Are you sure you want to delete ${location.name}?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      locationProvider.deleteLocation(location);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context); 
-                                    },
-                                    child: const Text('Delete'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  )),
+                  const Icon(Icons.arrow_drop_down),
                 ],
-                onSelected: (LocationCoords? value) {
-                  if (value == LocationCoords(name: 'add_new', latitude: 0, longitude: 0)) {
-                    _showAddLocationDialog(context, locationProvider);
-                  } else {
-                    locationProvider.setCurrentLocation(value!);
-                  }
-                },
               ),
-            ],
-          ),
+              itemBuilder: (context) => [
+                // Add new location option
+                const PopupMenuItem(
+                  value: LocationCoords(name: 'add_new', latitude: 0, longitude: 0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.add),
+                      SizedBox(width: 8),
+                      Text('Add New Location'),
+                    ],
+                  ),
+                ),
+                const PopupMenuDivider(),
+                // Saved locations
+                ...locationProvider.savedLocations.map((location) => PopupMenuItem(
+                  value: location,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          location.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, size: 20),
+                        onPressed: () {
+                          // Show confirmation dialog
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Delete Location'),
+                              content: Text('Are you sure you want to delete ${location.name}?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    locationProvider.deleteLocation(location);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context); 
+                                  },
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )),
+              ],
+              onSelected: (LocationCoords? value) {
+                if (value == LocationCoords(name: 'add_new', latitude: 0, longitude: 0)) {
+                  _showAddLocationDialog(context, locationProvider);
+                } else {
+                  locationProvider.setCurrentLocation(value!);
+                }
+              },
+            ),
+          ],
         );
       },
     );

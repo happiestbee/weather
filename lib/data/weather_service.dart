@@ -29,7 +29,7 @@ class WeatherService {
   }
 
   // Helper function to extract current weather data
-  Map<String, dynamic>? getCurrentWeather(ApiResponse<WeatherApi> response) {
+  Map<String, dynamic> getCurrentWeather(ApiResponse<WeatherApi> response) {
     return {
       'temperature': response.currentData[WeatherCurrent.temperature_2m]?.value,
       'apparentTemperature': response.currentData[WeatherCurrent.apparent_temperature]?.value,
