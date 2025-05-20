@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  geocoding: ^3.0.0
   open_meteo: ^2.0.3
   provider: ^6.1.5
 
