@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -18,7 +19,7 @@ class _MainPageState extends State<MainPage> {
     Widget page;
     switch (selectedIndex){
       case 0:
-        page = Placeholder(color: Colors.red,); // home screen
+        page = HomeScreen(); // home screen
         break;
       case 1:
         page = Placeholder(color: Colors.blue); // hourly
