@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../data/weather_provider.dart';
 
 const List<String> locations = <String>[
   'CAMBRIDGE',
@@ -18,6 +20,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final weatherProvider = Provider.of<WeatherProvider>(context);
+    final weatherData = weatherProvider.weatherData;
+    final weatherService = weatherProvider.weatherService;
+
+    final currentWeather = weatherData != null 
+        ? weatherService.getCurrentWeather(weatherData)
+        : null;
+      final dailyWeather = weatherData != null 
+        ? weatherService.getDailyWeather(weatherData)
+        : null;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -72,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.yellow,
                 ),
                 Text(
-                  "18°C",
+                  "${currentWeather?["temperature"]}°C",
                   style: TextStyle(color: Colors.black, fontSize: 36),
                 )
               ]
@@ -90,12 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "HI: 20°C",
+                  "HI: ${dailyWeather?[0]["maxTemperature"].round()}°C",
                   style: TextStyle(color: Colors.black, fontSize: 18),
                 ),
                 SizedBox(width: 20),
                 Text(
-                  "LO: 15°C",
+                  "LO: ${dailyWeather?[0]["minTemperature"].round()}°C",
                   style: TextStyle(color: Colors.black, fontSize: 18),
                 )
               ],
@@ -122,13 +135,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("18", style: TextStyle(fontSize: 24)),
+                                Text((currentWeather?["windSpeed"]).toString(), style: TextStyle(fontSize: 24)),
                                 Text("km/h"),
                               ],
                             ),
                           ],
                         ),
-                        Text("LIGHT WINDS, E")
+                        Text("??? WINDS, ${currentWeather?["windDirection"]}", style: TextStyle(fontSize: 10)),
                       ],
                     ),
                   )
