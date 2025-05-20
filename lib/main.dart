@@ -5,6 +5,7 @@ import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'src/sample_screen.dart';
 
+import 'src/hourly_screen.dart';
 
 void main() {
   runApp(
@@ -30,8 +31,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MainPage(),
+    return const MaterialApp(
+      home: Scaffold(
+        body: HourlyScreen()
+      ),
     );
   }
 }
