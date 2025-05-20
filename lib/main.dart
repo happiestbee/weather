@@ -4,8 +4,6 @@ import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'sample_screen.dart';
 
-final navigatorKey = GlobalKey<NavigatorState>();
-
 void main() {
   runApp(
     MultiProvider(
@@ -31,7 +29,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: navigatorKey,
       home: const SampleScreen(),
     );
   }
