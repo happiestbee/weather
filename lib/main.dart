@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
-import 'sample_screen.dart';
+import 'src/sample_screen.dart';
 
 void main() {
   runApp(

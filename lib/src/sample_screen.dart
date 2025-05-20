@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/weather_provider.dart';
-import 'src/location_bar.dart';
+import 'location_bar.dart';
 
 class SampleScreen extends StatefulWidget {
   const SampleScreen({super.key});
