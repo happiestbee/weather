@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'src/home.dart';
+
+import 'package:weather/src/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'src/sample_screen.dart';
+
 
 void main() {
   runApp(
