@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  open_meteo: ^2.0.3
+  provider: ^6.1.5
 
 dev_dependencies:
   flutter_test:
