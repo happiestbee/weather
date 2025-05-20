@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'src/home.dart';
+
+import 'package:weather/src/main_page.dart';
 import 'package:provider/provider.dart';
 import 'data/weather_provider.dart';
 import 'sample_screen.dart';
+
 
 void main() {
   runApp(
@@ -18,8 +21,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
+    return MaterialApp(
+      home: MainPage()
     );
   }
 }
