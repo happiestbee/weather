@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 import 'package:weather/sample_screen.dart';
 import 'package:weather/src/route_screen.dart';
 
@@ -20,7 +21,7 @@ class _MainPageState extends State<MainPage> {
     Widget page;
     switch (selectedIndex){
       case 0:
-        page = SampleScreen(); // home screen
+        page = HomeScreen(); // home screen
         break;
       case 1:
         page = Placeholder(color: Colors.blue); // hourly

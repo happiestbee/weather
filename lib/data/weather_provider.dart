@@ -13,7 +13,7 @@ class WeatherProvider with ChangeNotifier {
       _weatherData = await _weatherService.getWeatherData(latitude, longitude);
       notifyListeners();
     } catch (e) {
-      print('Error fetching weather data: $e');
+      debugPrint('Error fetching weather data: $e');
       // Handle error appropriately
       notifyListeners();
     }
