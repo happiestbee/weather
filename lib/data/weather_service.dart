@@ -20,6 +20,11 @@ class WeatherService {
           WeatherDaily.temperature_2m_min,
           WeatherDaily.precipitation_probability_max,
           WeatherDaily.uv_index_max,
+          WeatherDaily.wind_speed_10m_max,
+          WeatherDaily.wind_direction_10m_dominant,
+          WeatherDaily.weather_code,
+          WeatherDaily.sunrise,
+          WeatherDaily.sunset,
         }
       );
       return response;
@@ -51,6 +56,11 @@ class WeatherService {
         'minTemperature': response.dailyData[WeatherDaily.temperature_2m_min]?.values[date],
         'precipitationProbability': response.dailyData[WeatherDaily.precipitation_probability_max]?.values[date],
         'uvIndex': response.dailyData[WeatherDaily.uv_index_max]?.values[date],
+        'windSpeed': response.dailyData[WeatherDaily.wind_speed_10m_max]?.values[date],
+        'windDirection': response.dailyData[WeatherDaily.wind_direction_10m_dominant]?.values[date],
+        'weatherCode': response.dailyData[WeatherDaily.weather_code]?.values[date],
+        'sunrise': response.dailyData[WeatherDaily.sunrise]?.values[date],
+        'sunset': response.dailyData[WeatherDaily.sunset]?.values[date],
       });
     }
 
