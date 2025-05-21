@@ -81,15 +81,6 @@ Widget _infoBox({required String label, required String value}) {
           rain: day['precipitationProbability']?.toInt() ?? 0,
           windSpeed: day['windSpeed']?.toInt() ?? 0,
           windDirection: day['windDirection']?.toDouble() ?? 0.0,
-          uv: day['uvIndex']?.toInt() ?? 0,
-          humidity: day['humidity']?.toInt() ?? 0,
-          visibility: day['visibility']?.toInt() ?? 0,
-          pollen: day['pollen'] ?? '--',
-          pressure: day['pressure']?.toInt() ?? 0,
-          cloudCover: day['cloudCover']?.toInt() ?? 0,
-          weatherCode: day['weatherCode']?.toInt() ?? 0,
-          sunrise: DateTime.fromMillisecondsSinceEpoch((day['sunrise'] as num).toInt() * 1000),
-          sunset: DateTime.fromMillisecondsSinceEpoch((day['sunset'] as num).toInt() * 1000)
         );
       }).toList();
 
@@ -160,7 +151,6 @@ Widget _infoBox({required String label, required String value}) {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: List.generate(dailyData.length, (index) {
-                      final data = chartData[index];
                       final isSelected = index == selectedIndex;
                       final weatherCode = (dailyData[index]['weatherCode'] as num?)?.toInt() ?? 0;
 
@@ -304,11 +294,12 @@ Widget _infoBox({required String label, required String value}) {
                             ),
                             _infoBox(
                               label: "HUMIDITY",
-                              value: DateFormat('h:mm a').format(selectedChart.sunrise)
+                              value: "${(selectedDay['humidity'] ?? 0).round()}%"
                             ),
                             _infoBox(
                               label: "VISIBILITY",
-                              value: DateFormat('h:mm a').format(selectedChart.sunrise)
+                              value: "${((selectedDay['visibility'] ?? 0) / 1000).toStringAsFixed(1)} KM"
+
                             ),
                           ]
                         ),
@@ -318,15 +309,15 @@ Widget _infoBox({required String label, required String value}) {
                           children: [
                             _infoBox(
                               label: "PRESSURE",
-                              value: "${(selectedDay['uvIndex'] ?? 0).round()}"
+                              value: "${(selectedDay['pressure'] ?? 0).round()} MB"
                             ),
                             _infoBox(
                               label: "TOTAL PRECIPITATION",
-                              value: "DATA"
+                              value: "${(selectedDay['totalPrecipitation']).toStringAsFixed(1)} MM",
                             ),
                             _infoBox(
                               label: "CLOUD COVER",
-                              value: "DATA"
+                              value: "${(selectedDay['cloudCover'] ?? 0).round()}%"
                             )
                           ],
                         )
@@ -356,22 +347,13 @@ Widget _infoBox({required String label, required String value}) {
 }*/
 
 class ChartSampleData {
-  ChartSampleData({required this.x, required this.high, required this.low, required this.rain, required this.windSpeed, required this.windDirection, required this.uv, required this.humidity, required this.visibility, required this.pollen, required this.pressure, required this.cloudCover, required this.weatherCode, required this.sunrise, required this.sunset});
+  ChartSampleData({required this.x, required this.high, required this.low, required this.rain, required this.windSpeed, required this.windDirection,});
   final DateTime x;
   final double high;
   final double low;
   final int rain;
   final int windSpeed;
-  final double windDirection;
-  final int uv;
-  final int humidity;
-  final int visibility;
-  final String pollen;
-  final int pressure;
-  final int cloudCover;
-  final int weatherCode;
-  final DateTime sunrise;
-  final DateTime sunset;
+  final double windDirection;  
 }
 
 double directionToRadians(num directionDegrees) {
@@ -419,5 +401,5 @@ IconData getWeatherIcon(int code) {
   if (code >= 85 && code <= 86) return WeatherIcons.snow_wind;
   if (code == 95) return WeatherIcons.thunderstorm;
   if (code == 96 || code == 99) return WeatherIcons.thunderstorm;
-  return WeatherIcons.na; // Unknown or unhandled code
+  return WeatherIcons.na;
 }
