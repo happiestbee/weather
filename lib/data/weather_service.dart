@@ -20,6 +20,13 @@ class WeatherService {
           WeatherDaily.temperature_2m_min,
           WeatherDaily.precipitation_probability_max,
           WeatherDaily.uv_index_max,
+        },
+        hourly: {
+          WeatherHourly.temperature_2m,
+          WeatherHourly.precipitation_probability,
+          WeatherHourly.uv_index,
+          WeatherHourly.wind_direction_10m,
+          WeatherHourly.wind_speed_10m,
         }
       );
       return response;
@@ -55,5 +62,23 @@ class WeatherService {
     }
 
     return dailyData;
+  }
+  
+  // Helper function to extract hourly weather data
+  List<Map<String, dynamic>> getHourlyWeather(ApiResponse<WeatherApi> response) {
+    final hourlyData = <Map<String, dynamic>>[];
+    final times = response.hourlyData[WeatherHourly.temperature_2m]?.values.keys.toList() ?? [];
+    for (final time in times) {
+      hourlyData.add({
+        'time': time,
+        'temperature': response.hourlyData[WeatherHourly.temperature_2m]?.values[time],
+        'precipitationProbability': response.hourlyData[WeatherHourly.precipitation_probability]?.values[time],
+        'uvIndex': response.hourlyData[WeatherHourly.uv_index]?.values[time],
+        'windSpeed': response.hourlyData[WeatherHourly.wind_speed_10m]?.values[time],
+        'windDirection': response.hourlyData[WeatherHourly.wind_direction_10m]?.values[time],
+      });
+    }
+
+    return hourlyData;
   }
 }
