@@ -14,7 +14,9 @@ class WeatherService {
           WeatherCurrent.apparent_temperature,
           WeatherCurrent.wind_speed_10m, 
           WeatherCurrent.wind_direction_10m,
-          WeatherCurrent.wind_gusts_10m},
+          WeatherCurrent.wind_gusts_10m,
+          WeatherCurrent.weather_code,
+          },
         daily: {
           WeatherDaily.temperature_2m_max,
           WeatherDaily.temperature_2m_min,
@@ -53,6 +55,7 @@ class WeatherService {
       'windSpeed': response.currentData[WeatherCurrent.wind_speed_10m]?.value,
       'windDirection': response.currentData[WeatherCurrent.wind_direction_10m]?.value,
       'windGusts': response.currentData[WeatherCurrent.wind_gusts_10m]?.value,
+      'weatherCode': response.currentData[WeatherCurrent.weather_code]?.value,
     };
   }
 

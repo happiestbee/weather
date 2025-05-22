@@ -26,7 +26,7 @@ class _DailyWeatherState extends State<DailyWeather> {
     super.initState();
     Future.microtask(() {
       final provider = Provider.of<WeatherProvider>(context, listen: false);
-      provider.fetchWeather(51.5074, -0.1278);
+      provider.fetchWeather(52.21511338264836, 0.09346701373558003);
     });
   }
 
@@ -68,7 +68,7 @@ Widget _infoBox({required String label, required String value}) {
 
       if (dailyData.isEmpty) {
         return Scaffold(
-          backgroundColor: Color.fromARGB(255, 50, 173, 230),
+          //backgroundColor: Color.fromARGB(0, 255, 255, 255),
           body: Center(child: CircularProgressIndicator()),
         );
       }
@@ -89,7 +89,7 @@ Widget _infoBox({required String label, required String value}) {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  Color.fromARGB(255, 50, 173, 230),
+        //backgroundColor:  Color.fromARGB(0, 255, 255, 255),
         body: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -132,7 +132,7 @@ Widget _infoBox({required String label, required String value}) {
                               DateFormat.E().format(date)[0],
                               style: TextStyle(
                                 color: isSelected
-                                ? Color.fromARGB(255, 50, 173, 230) 
+                                ? Theme.of(context).primaryColor 
                                 : Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -237,21 +237,21 @@ Widget _infoBox({required String label, required String value}) {
                           ),
                           child: Column(
                             children: [
-                              Icon(Icons.water_drop, size: 24, color: isSelected ? Color.fromARGB(255, 50, 173, 230) : Colors.white),
+                              Icon(Icons.water_drop, size: 24, color: isSelected ? Theme.of(context).primaryColor : Colors.white),
                               SizedBox(height: 4),
                               Text("${data.rain}%",
-                                style: TextStyle(color: isSelected ? Color.fromARGB(255, 50, 173, 230) : Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+                                style: TextStyle(color: isSelected ? Theme.of(context).primaryColor : Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
                               SizedBox(height: 15),
                               Transform.rotate(
                                 angle: directionToRadians(data.windDirection),
-                                child: Icon(Icons.arrow_upward, size: 20, color: isSelected ? Color.fromARGB(255, 50, 173, 230) : Colors.white)),
+                                child: Icon(Icons.arrow_upward, size: 20, color: isSelected ? Theme.of(context).primaryColor : Colors.white)),
                               SizedBox(height: 2),
                               Text("${data.windSpeed}",
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: isSelected ? Color.fromARGB(255, 50, 173, 230) : Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+                              style: TextStyle(color: isSelected ? Theme.of(context).primaryColor : Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
                                 Text("KM/H",
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: isSelected ? Color.fromARGB(255, 50, 173, 230) : Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                              style: TextStyle(color: isSelected ? Theme.of(context).primaryColor : Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                              ],
                           ),
                         ),

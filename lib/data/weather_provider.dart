@@ -6,15 +6,18 @@ class WeatherProvider with ChangeNotifier {
   ApiResponse<WeatherApi>? _weatherData;
   final WeatherService _weatherService = WeatherService();
 
+  int? _currentWeatherCode;
+
   ApiResponse<WeatherApi>? get weatherData => _weatherData;
+  int? get currentWeatherCode => _currentWeatherCode;
 
   Future<void> fetchWeather(double latitude, double longitude) async {
     try {
       _weatherData = await _weatherService.getWeatherData(latitude, longitude);
+      final current = _weatherService.getCurrentWeather(_weatherData!);
+      _currentWeatherCode = current?['weatherCode']?.toInt();
       notifyListeners();
     } catch (e) {
-      debugPrint('Error fetching weather data: $e');
-      // Handle error appropriately
       notifyListeners();
     }
   }
