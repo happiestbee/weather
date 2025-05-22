@@ -28,6 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
   bool cycleMode = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+      final locationProvider = Provider.of<LocationProvider>(context, listen: false);
+      weatherProvider.fetchWeather(locationProvider.currentLocation.latitude, locationProvider.currentLocation.longitude);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final weatherProvider = Provider.of<WeatherProvider>(context);
     final weatherData = weatherProvider.weatherData;
@@ -37,18 +47,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final currentWeather = weatherData != null 
       ? weatherService.getCurrentWeather(weatherData)
-      : {
-        "temperature": 15,
-        "windSpeed": 13,
-        "windDirection": "SSE",
-      };
+      : null;
 
     final dailyWeather = weatherData != null 
       ? weatherService.getDailyWeather(weatherData)
-      : [{
-          "maxTemperature": 20,
-          "minTemperature": 10,
-      }];
+      : null;
+
+    if (currentWeather == null || dailyWeather == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     var windCat = switch (currentWeather["windSpeed"]) {
       >= 0 && < 7 => "still",
@@ -62,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     };
 
     double getWindDirRadians() {
-      return (windDirMap[currentWeather["windDirection"]] ?? 0) * (3.14 / 180);
+      return currentWeather["windDirection"] * (3.14 / 180);
     }
 
     if (cycleMode) {
@@ -90,14 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${currentWeather["temperature"]}°C",
+                "${currentWeather["temperature"].round()}°C",
                 style: TextStyle(color: Colors.black, fontSize: 100),
               ),
-              Text("$windCat WINDS, ${currentWeather["windDirection"]}", style: TextStyle(fontSize: 40)),
+              Text("$windCat WINDS, ${currentWeather["windDirectionOrdinal"]}", style: TextStyle(fontSize: 40)),
               SizedBox(height: 30),
-              Icon(
-                Icons.directions_bike,
-                size: 200,
+              Image.asset(
+                "assets/cycle.png",
+                width: 200,
               ),
               SizedBox(height: 20),
               Card(
@@ -151,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.yellow,
                 ),
                 Text(
-                  "${currentWeather["temperature"]}°C",
+                  "${currentWeather["temperature"].round()}°C",
                   style: TextStyle(color: Colors.black, fontSize: 36),
                 )
               ]
@@ -202,13 +209,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text((currentWeather["windSpeed"]).toString(), style: TextStyle(fontSize: 24)),
+                                Text((currentWeather["windSpeed"].round()).toString(), style: TextStyle(fontSize: 24)),
                                 Text("km/h"),
                               ],
                             ),
                           ],
                         ),
-                        Text("$windCat WINDS, ${currentWeather["windDirection"]}", style: TextStyle(fontSize: 10)),
+                        Text("$windCat WINDS, ${currentWeather["windDirectionOrdinal"]}", style: TextStyle(fontSize: 10)),
                       ],
                     ),
                   )
