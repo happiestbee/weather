@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
-import '../DailyWeather.dart';
+import '../daily_weather.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
