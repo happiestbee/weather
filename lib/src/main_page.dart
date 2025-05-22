@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import '../daily_weather.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -25,7 +26,7 @@ class _MainPageState extends State<MainPage> {
         page = Placeholder(color: Colors.blue); // hourly
         break;
       case 2:
-        page = Placeholder(color: Colors.green); // daily
+        page = DailyWeather(); // daily
         break;
       case 3:
         page = Placeholder(color: Colors.orange); // route

@@ -14,7 +14,9 @@ class WeatherService {
           WeatherCurrent.apparent_temperature,
           WeatherCurrent.wind_speed_10m, 
           WeatherCurrent.wind_direction_10m,
-          WeatherCurrent.wind_gusts_10m},
+          WeatherCurrent.wind_gusts_10m,
+          WeatherCurrent.weather_code,
+          },
         daily: {
           WeatherDaily.temperature_2m_max,
           WeatherDaily.temperature_2m_min,
@@ -45,6 +47,15 @@ class WeatherService {
     }
   }
 
+  String getWindDirectionOrdinal(double windDirection) {
+    const windDirections = [
+      'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+      'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+    ];
+    final index = ((windDirection + 11.25) / 22.5).round() % 16;
+    return windDirections[index];
+  }
+
   // Helper function to extract current weather data
   Map<String, dynamic> getCurrentWeather(ApiResponse<WeatherApi> response) {
     return {
@@ -53,6 +64,10 @@ class WeatherService {
       'windSpeed': response.currentData[WeatherCurrent.wind_speed_10m]?.value,
       'windDirection': response.currentData[WeatherCurrent.wind_direction_10m]?.value,
       'windGusts': response.currentData[WeatherCurrent.wind_gusts_10m]?.value,
+      'windDirectionOrdinal': getWindDirectionOrdinal(
+        response.currentData[WeatherCurrent.wind_direction_10m]?.value ?? 0,
+      ),
+      'weatherCode': response.currentData[WeatherCurrent.weather_code]?.value,
     };
   }
 
