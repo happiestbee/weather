@@ -1,24 +1,48 @@
 import 'dart:math';
+import 'package:weather/src/location_bar.dart';
 
 class Journey {
   
-  Location start = Location("???");
-  var waypoints = <Location>[];
-  Location dest = Location("???");
+  LocationCoords start = LocationCoords(
+    name: "", 
+    latitude: .0, 
+    longitude: .0,
+  );
+
+  var waypoints = <LocationCoords>[];
+
+  LocationCoords dest = LocationCoords(
+    name: "", 
+    latitude: .0, 
+    longitude: .0,
+  );
+
+  DateTime? startTime;
+  DateTime? endTime;
 
   Journey() {
-    waypoints = List<Location>.empty(growable: true);
+    waypoints = List<LocationCoords>.empty(growable: true);
   }
+
+  Future<LocationCoords> createLocationFromName(String name) async {
+    return LocationCoords(
+        name: name,
+        latitude: .0,
+        longitude: .0,
+      );
+      // TODO: Use geocoding to get the latitude and longitude      
+    }
   
-  void setStart(Location start) {
-    this.start=start;
+  Future<void> setStart(String start) async {
+    this.start=await createLocationFromName(start);
   }
 
-  void setDest(Location dest) {
-    this.dest = dest;
+  Future<void> setDest(String dest) async {
+    this.dest = await createLocationFromName(dest);
   }
 
-  void addWaypoint(Location waypoint, {int i = -1}) {
+  Future<void> addWaypoint(String waypointName, {int i = -1}) async{
+    LocationCoords waypoint = await createLocationFromName(waypointName);
     if (i == -1) {
       waypoints.add(waypoint);
     } else {
@@ -26,7 +50,16 @@ class Journey {
     }
   }
 
-  void setWaypoint(Location waypoint, int i) {
+  void addNewWaypoint() {
+    waypoints.add(LocationCoords(
+      name: "", 
+      latitude: .0, 
+      longitude: .0,
+    ));
+  }
+
+  Future<void> setWaypoint(String waypointName, int i) async {
+    LocationCoords waypoint = await createLocationFromName(waypointName);
     if (i < waypoints.length) {
       waypoints[i] = waypoint;
     }
@@ -38,24 +71,16 @@ class Journey {
     }
   }
 
+  String shortenedName(LocationCoords location) {
+    if (location.name.isEmpty) {
+      return "???";
+    }
+    return location.name.substring(0, min(3,location.name.length));
+  }
+
   @override
   String toString(){
-      return "${start.shortened()} - ${dest.shortened()}";
+      return "${shortenedName(start)} - ${shortenedName(dest)}";
   }
-
-
-   
-}
-
-class Location {
-
-  final String name;     
-  const Location(this.name); 
-
-  String shortened() {
-    return name.substring(0, min(3,name.length));
-  }
-
-  String getName() {return name;}
 
 }

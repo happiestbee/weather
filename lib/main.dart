@@ -5,7 +5,6 @@ import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'src/sample_screen.dart';
 
-
 void main() {
   runApp(
     MultiProvider(
