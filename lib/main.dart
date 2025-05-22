@@ -8,6 +8,7 @@ import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'src/sample_screen.dart';
 import 'daily_weather.dart';
+import 'package:weather/src/main_page.dart';
 
 void main() {
   runApp(
@@ -37,7 +38,7 @@ class MainApp extends StatelessWidget {
     
     return MaterialApp(
       theme: getThemeForWeather(weatherCode),
-      home: DailyWeather(),
+      home: MainPage(),
     );
   }
 }
