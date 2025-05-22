@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather/src/journey.dart';
+import 'package:weather/src/route_manager.dart';
 import 'package:weather/src/route_map.dart';
 import 'package:weather/src/waypoint_bar.dart';
 
@@ -11,61 +13,73 @@ class RouteScreen extends StatefulWidget {
   
 }
 
-class _RouteScreenState extends State<RouteScreen> { 
+class _RouteScreenState extends State<RouteScreen> {  // Instance of the route manager
   
-  Journey currentRoute = Journey();  
-  var savedRoutes = <Journey>[];  
-
+  // Text controllers for the locations
   late TextEditingController startController;
   late List<TextEditingController> waypointControllers;
   late TextEditingController destController;
+
+  // Text controllers for the start and end times
   late TextEditingController startTimeController;
   late TextEditingController endTimeController;  
 
   @override
   void initState() {
     super.initState();
-    _initControllers();  
+    final routeManager = Provider.of<RouteManager>(context, listen: false);
+
+    _initControllers(routeManager);  
+  }
+
+  // return a text controller for the location text field of a given marker
+  TextEditingController _locationController(WeatherMarker? marker) {
+    return TextEditingController(text: 
+      (marker != null) 
+        ? marker.name 
+        : ""
+    );
+  }
+
+  // return a text controller for the time text field of a given time
+  TextEditingController _timeController(DateTime? time) {
+    return TextEditingController(text: 
+      (time != null) 
+        ? TimeOfDay.fromDateTime(time).format(context) 
+        : ""
+    );
   }
 
   // Initialize the text controllers for the start, waypoints, and destination text fields
-  void _initControllers() {
-    startController = TextEditingController(
-      text: (currentRoute.start!=null) 
-        ? currentRoute.start!.name 
-        : ""
-    );
+  void _initControllers(RouteManager routeManager) {    
+    final currentRoute = routeManager.currentRoute;
+
+    startController = _locationController(currentRoute.start);
+    destController = _locationController(currentRoute.dest);
+
     waypointControllers = currentRoute.waypoints.map(
-      (w) => TextEditingController(text: w.name))
-      .toList();
-    destController = TextEditingController(
-      text: (currentRoute.dest!=null) 
-        ? currentRoute.dest!.name 
-        : ""
-    );
-    startTimeController = TextEditingController(
-      text: currentRoute.startTime != null
-          ? currentRoute.startTime!.toString()
-          : "");
-    endTimeController = TextEditingController(
-        text: currentRoute.endTime != null
-            ? TimeOfDay.fromDateTime(currentRoute.endTime!).format(context)
-            : "");
+      (w) => _locationController(w)).toList();    
+
+    startTimeController = _timeController(currentRoute.startTime);
+    endTimeController = _timeController(currentRoute.endTime);
   }
 
   // Dispose of the text controllers to free up resources
   void _disposeControllers() {
     startController.dispose();
+    destController.dispose();
+
     for (var controller in waypointControllers) {
       controller.dispose();
     }
-    destController.dispose();
+    
     startTimeController.dispose();
     endTimeController.dispose(); 
   }
 
-  // Helper to interpolate waypoint times
-  List<TimeOfDay?> _interpolatedWaypointTimes() {
+  // Interpolate waypoint times
+  List<TimeOfDay?> _interpolatedWaypointTimes(RouteManager rm) {
+    final currentRoute = rm.currentRoute;
     if (currentRoute.startTime == null || currentRoute.endTime == null || currentRoute.waypoints.isEmpty) {
       return List.filled(currentRoute.waypoints.length, null);
     }
@@ -88,28 +102,27 @@ class _RouteScreenState extends State<RouteScreen> {
   }
 
   // Toggle the favorite status of the current route
-  void favorite() {
-    if (savedRoutes.contains(currentRoute)) {
-      savedRoutes.remove(currentRoute);
-    } else{
-      savedRoutes.add(currentRoute);
-    }
+  void favorite(RouteManager routeManager) {
+    routeManager.toggleSaveCurrentRoute();
   }
 
   // Create a new route
-  void newRoute() => changeRoute(Journey());
+  void newRoute(RouteManager rm) => changeRoute(rm, Journey());
 
   // Change the current route to a new one and update the text controllers
-  void changeRoute(Journey route) {
+  void changeRoute(rm, Journey route) {
     setState(() {
-      currentRoute = route;
+      rm.currentRoute = route;
       _disposeControllers();
-      _initControllers();
+      _initControllers(rm);
     });
   }
 
   @override
   Widget build(BuildContext context) {  
+    final routeManager = Provider.of<RouteManager>(context);
+    final currentRoute = routeManager.currentRoute;
+    final savedRoutes = routeManager.savedRoutes;
 
     // Icon to indicate whether the current route is saved or not
     IconData favoriteIcon = savedRoutes.contains(currentRoute)
@@ -123,8 +136,7 @@ class _RouteScreenState extends State<RouteScreen> {
       dropdownRoutes.add(currentRoute);
     }
 
-    List<TimeOfDay?> waypointTimes = _interpolatedWaypointTimes(); 
-
+    List<TimeOfDay?> waypointTimes = _interpolatedWaypointTimes(routeManager); 
      
     return Scaffold(      
       body: Column(
@@ -134,7 +146,7 @@ class _RouteScreenState extends State<RouteScreen> {
               currentRoute: currentRoute,
               // On changed callback to update the controllers and route 
               // when a marker is added or deleted
-              onChanged: () => setState(() {_disposeControllers(); _initControllers();}),
+              onChanged: () => setState(() {_disposeControllers(); _initControllers(routeManager);}),
             ),
           ),
           Row(
@@ -146,7 +158,7 @@ class _RouteScreenState extends State<RouteScreen> {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
-                        favorite();
+                        favorite(routeManager);
                       });
                     },
                     icon: Icon(favoriteIcon),
@@ -169,7 +181,7 @@ class _RouteScreenState extends State<RouteScreen> {
                     }).toList(),
                     onChanged: (Journey? selected) {
                       if (selected != null) {
-                        setState(() => changeRoute(selected));                        
+                        setState(() => changeRoute(routeManager, selected));                        
                       }
                     },
                   ),
@@ -182,7 +194,7 @@ class _RouteScreenState extends State<RouteScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        newRoute();
+                        newRoute(routeManager);
                       });
                     },
                     child: Text("New Route"),
@@ -213,9 +225,7 @@ class _RouteScreenState extends State<RouteScreen> {
                       currentRoute.waypoints.length,
                       (i) => WaypointBar(
                         locationController: waypointControllers[i],
-                        timeController: TextEditingController(
-                          text: waypointTimes[i]?.format(context),
-                        ),
+                        timeController: TextEditingController(text: waypointTimes[i]?.format(context)),
                         route: currentRoute,
                         type: LocationType.waypoint,
                         waypointIndex: i,

@@ -3,6 +3,7 @@ import 'package:weather/data/theme.dart';
 import 'package:weather/src/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
+import 'package:weather/src/route_manager.dart';
 import 'data/weather_provider.dart';
 
 void main() {
@@ -17,12 +18,12 @@ void main() {
           update: (context, weatherProvider, previous) => 
             previous ?? LocationProvider(weatherProvider),
         ),
+        ChangeNotifierProvider(create: (_) => RouteManager()),
       ],
       child: const MainApp(),
     ),
   );
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

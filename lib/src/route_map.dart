@@ -50,12 +50,8 @@ class _RouteMapState extends State<RouteMap> {
       }
       setState(() {
         if (_markerTypeToAdd == MarkerType.start) {
-          // _startMarker = WeatherMarker(
-          //   position: position,
-          //   temperature: temp,
-          //   name: 'Start',
-          //   type: MarkerType.start,
-          // );
+          // Create a new WeatherMarker for the start position
+          // and assign it to the current route
           widget.currentRoute.start = WeatherMarker(
             position: position,
             temperature: temp,
@@ -63,12 +59,7 @@ class _RouteMapState extends State<RouteMap> {
             type: MarkerType.start,
           );
         } else if (_markerTypeToAdd == MarkerType.destination) {
-          // _destinationMarker = WeatherMarker(
-          //   position: position,
-          //   temperature: temp,
-          //   name: 'Destination',
-          //   type: MarkerType.destination,
-          // );
+          // Create a new WeatherMarker for the destination position
           widget.currentRoute.dest = WeatherMarker(
             position: position,
             temperature: temp,
@@ -76,16 +67,13 @@ class _RouteMapState extends State<RouteMap> {
             type: MarkerType.destination,
           );
         } else if (_markerTypeToAdd == MarkerType.waypoint) {
-          // _waypointMarkers.add(WeatherMarker(
-          //   position: position,
-          //   temperature: temp,
-          //   name: 'Waypoint',
-          //   type: MarkerType.waypoint,
-          // ));
+          // Create a new WeatherMarker for the waypoint position
           widget.currentRoute.addWaypoint(
             WeatherMarker(
               position: position,
               temperature: temp,
+              // Use the length of the waypoints list to name the waypoints in order
+              // User can change the name in the text field
               name: 'Waypoint ${widget.currentRoute.waypoints.length + 1}',
               type: MarkerType.waypoint,
             ),
@@ -97,29 +85,17 @@ class _RouteMapState extends State<RouteMap> {
     }
   }
 
-  // void setMarkers({
-  //   WeatherMarker? start,
-  //   WeatherMarker? destination,
-  //   List<WeatherMarker>? waypoints,
-  // }) {
-  //   setState(() {
-  //     _startMarker = start;
-  //     _destinationMarker = destination;
-  //     _waypointMarkers.clear();
-  //     if (waypoints != null) {
-  //       _waypointMarkers.addAll(waypoints);
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
 
+    // Create Marker's based on the WeatherMarker objects in the current route
     Marker? startMarker = widget.currentRoute.start != null
         ? Marker(
             markerId: const MarkerId('start_marker'),
             position: widget.currentRoute.start!.position,
             infoWindow: InfoWindow(
+              // Use the temperature from the WeatherMarker object
+              // May want to display more weather data
               title: widget.currentRoute.start!.temperature != null ? 'Start: ${widget.currentRoute.start!.temperature!.toStringAsFixed(1)}°C' : 'Start: Loading...'),
             icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           )
@@ -164,29 +140,6 @@ class _RouteMapState extends State<RouteMap> {
                       zoom: 11.0,
                     ),
                     markers: {
-                      // if (_startMarker != null)
-                      //   Marker(
-                      //     markerId: const MarkerId('start_marker'),
-                      //     position: _startMarker!.position,
-                      //     infoWindow: InfoWindow(
-                      //       title: _startMarker!.temperature != null ? 'Start: ${_startMarker!.temperature!.toStringAsFixed(1)}°C' : 'Start: Loading...'),
-                      //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-                      //   ),
-                      // if (_destinationMarker != null)
-                      //   Marker(
-                      //     markerId: const MarkerId('destination_marker'),
-                      //     position: _destinationMarker!.position,
-                      //     infoWindow: InfoWindow(
-                      //       title: _destinationMarker!.temperature != null ? 'Destination: ${_destinationMarker!.temperature!.toStringAsFixed(1)}°C' : 'Destination: Loading...'),
-                      //       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-                      //     ),                     
-                      // ..._waypointMarkers.asMap().entries.map((entry) => Marker(
-                      //   markerId: MarkerId('waypoint_marker_${entry.key}_${entry.value.position.latitude}_${entry.value.position.longitude}'),
-                      //   position: entry.value.position,
-                      //   infoWindow: InfoWindow(
-                      //     title: entry.value.temperature != null ? 'Waypoint: ${entry.value.temperature!.toStringAsFixed(1)}°C' : 'Waypoint: Loading...'),
-                      //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                      // )),
                       if (startMarker != null) startMarker,
                       if (destinationMarker != null) destinationMarker,
                       ...waypointMarkers,
@@ -195,21 +148,6 @@ class _RouteMapState extends State<RouteMap> {
                     onTap: _onMapTapped,
                   ),
                 ),
-                // Expanded(
-                //   child: Stack(
-                //     children: [
-                //       Placeholder(color: Colors.blue),
-                //       if (_addingMarker)
-                //         Positioned.fill(
-                //           child: IgnorePointer(
-                //             child: Container(
-                //               color: Colors.black.withValues(alpha: 0.4),
-                //             ),
-                //           ),
-                //         ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
             Positioned(

@@ -31,7 +31,8 @@ class WaypointBar extends StatefulWidget {
 }
 
 class _WaypointBarState extends State<WaypointBar> {
-    // Create an input decoration for the text fields when provided with a label
+  
+  // Return an input decoration for text fields, provided with a label
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
@@ -44,10 +45,25 @@ class _WaypointBarState extends State<WaypointBar> {
     );
   }
 
+  // Return a label for location field based on the type of location
+  String get _label {
+    switch (widget.type) {
+      case LocationType.start:
+        return "Start";
+      case LocationType.waypoint:
+        return "Waypoint ${widget.waypointIndex! + 1}";
+      case LocationType.dest:
+        return "Destination";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
+    // If the location does not exist, user should not be able to 
+    // set its name or time
     bool locationExists;
+    // Check if the location exists based on the type
     switch(widget.type) {
       case LocationType.start:
         locationExists = widget.route.start != null;
@@ -55,22 +71,17 @@ class _WaypointBarState extends State<WaypointBar> {
         locationExists = true; // if the waypoint did not exist, it would not be shown 
       case LocationType.dest:
         locationExists = widget.route.dest != null;
-    };
+    }
 
     return Row(
       children: [
         Expanded(     
-          child: TextField(
+          child: TextField( // text field for the location name
             controller: widget.locationController,
-            decoration: _inputDecoration(
-              widget.type == LocationType.start
-                  ? "Start"
-                  : widget.type == LocationType.waypoint
-                      ? "Waypoint ${widget.waypointIndex! + 1}"
-                      : "Destination",
-            ),
+            decoration: _inputDecoration(_label),            
             enabled: locationExists,
             onChanged: (value) {
+              // update the name of the location based on the type
               setState(() {
                 switch (widget.type) {
                   case LocationType.start:
@@ -80,6 +91,7 @@ class _WaypointBarState extends State<WaypointBar> {
                   case LocationType.dest:
                     widget.route.setDestName(value);
                 }
+                // call the onChanged function to rebuil route_screen
                 widget.onChanged();
               });
             },
@@ -92,24 +104,32 @@ class _WaypointBarState extends State<WaypointBar> {
             controller: widget.timeController,
             decoration: _inputDecoration("Time"),
             readOnly: true,
+            enabled: locationExists,
             onTap: () {
-              setState(() {            
+              setState(() {       
+                // only able to edit time for start and destination
+                // waypoint time is linearly intepolated 
+                // could be changed to allow user to set time for waypoint    
                 if (widget.type != LocationType.waypoint) {
                   
+                  // User only allowed to select time of day
                   Future<TimeOfDay?> time = showTimePicker(
                     context: context,
                     initialTime: TimeOfDay.now(),                
                   );
+
                   time.then((value) {
                     if (value != null) {
                       DateTime dateTime = DateTime(
+                        // day of the year is set to current day
                         DateTime.now().year,
                         DateTime.now().month,
                         DateTime.now().day,
                         value.hour,
                         value.minute,
                       );
-                      switch (widget.type) {
+                      // assign the time to the start or end of the route
+                      switch (widget.type) {                        
                         case LocationType.start:
                           widget.route.startTime = dateTime;
                         case LocationType.waypoint:
@@ -117,17 +137,18 @@ class _WaypointBarState extends State<WaypointBar> {
                         case LocationType.dest:
                           widget.route.endTime = dateTime;
                       }
-                    }
+                    } 
+                    // update the text field with the selected time                   
                     widget.timeController.text = value?.format(context) ?? "";
+                    // call the onChanged function to update the route
+                    // this is needed to update the time of the waypoints
                     widget.onChanged();  
                   }); 
                 }           
-              });          
-                          
+              });                                 
             },
           ),
-        ),
-        
+        ),      
       ],
     );
   }
