@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  geocoding_ios: d7460f56e80e118d57678efe5c2cdc888739ff18
+  geocoding_ios: bcbdaa6bddd7d3129c9bcb8acddc5d8778689768
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
 

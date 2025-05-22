@@ -27,6 +27,7 @@ class WeatherService {
           WeatherHourly.uv_index,
           WeatherHourly.wind_direction_10m,
           WeatherHourly.wind_speed_10m,
+          WeatherHourly.cloud_cover,
         }
       );
       return response;
@@ -76,6 +77,7 @@ class WeatherService {
         'uvIndex': response.hourlyData[WeatherHourly.uv_index]?.values[time],
         'windSpeed': response.hourlyData[WeatherHourly.wind_speed_10m]?.values[time],
         'windDirection': response.hourlyData[WeatherHourly.wind_direction_10m]?.values[time],
+        'cloudCoverage': response.hourlyData[WeatherHourly.cloud_cover]?.values[time],
       });
     }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather/src/hourly_screen.dart';
 import 'home.dart';
 
 class MainPage extends StatefulWidget{
@@ -22,7 +23,7 @@ class _MainPageState extends State<MainPage> {
         page = HomeScreen(); // home screen
         break;
       case 1:
-        page = Placeholder(color: Colors.blue); // hourly
+        page = HourlyScreen(); // hourly
         break;
       case 2:
         page = Placeholder(color: Colors.green); // daily

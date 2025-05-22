@@ -1,14 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather/data/weather_provider.dart';
+import 'package:weather/src/location_bar.dart';
 
 class HourlyScreen extends StatefulWidget{
-  final WeatherProvider weatherProvider;
+  final WeatherProvider weatherProvider = WeatherProvider();
 
-  const HourlyScreen({
+  HourlyScreen({
     super.key,
-    required this.weatherProvider,
   });
  
   @override
@@ -24,9 +25,8 @@ class _HourlyScreenState extends State<HourlyScreen> {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 200),// reserved for the location selector
-          HourlyUpdatedArea(weatherProvider: widget.weatherProvider,),
-          SizedBox(height: 100) // reserved for screen select
+          SizedBox(height: 150,child: LocationBar()),
+          HourlyUpdatedArea(),
         ],
       )
     );   
@@ -35,11 +35,9 @@ class _HourlyScreenState extends State<HourlyScreen> {
 }
 
 class HourlyUpdatedArea extends StatefulWidget{
-  final WeatherProvider weatherProvider;
 
   const HourlyUpdatedArea({
     super.key,
-    required this.weatherProvider,
   });
  
   @override
@@ -47,36 +45,21 @@ class HourlyUpdatedArea extends StatefulWidget{
 }
 
 class _HourlyUpdatedArea extends State<HourlyUpdatedArea>{
-  bool ready = false;
   var currentDay = SelectedDay();
 
   @override
-  void initState() {
-    fetchData();
-    super.initState();
-  }
-  
-  @override
   Widget build(BuildContext context){
-    if (ready){
+    final weatherProvider = Provider.of<WeatherProvider>(context);
+    if (weatherProvider.weatherData != null){
       return Column(
         children: [
-          DaySelect(updateOnSelect: this, currentDay: currentDay, weatherProvider: widget.weatherProvider,),
-          HourlyDisplay(currentDay: currentDay, weatherProvider: widget.weatherProvider,),
+          DaySelect(updateOnSelect: this, currentDay: currentDay, weatherProvider: weatherProvider,),
+          HourlyDisplay(currentDay: currentDay, weatherProvider: weatherProvider,),
         ]);
     }
     else{
-      return Icon(Icons.square);
+      return Column(children: [Icon(Icons.square) ,Text("due to a error this has not loaded, this may be fixed by selecting a location")]);
     }
-  }
-
-  void fetchData(){
-    widget.weatherProvider.fetchWeather(50.0, 0.0).then((_){
-        setState(() {
-          ready = true;
-        });
-      }
-    );
   }
 }
 
@@ -118,21 +101,20 @@ class _HourlyDisplayState extends State<HourlyDisplay>{
         rainChance: x["precipitationProbability"],
         windDir: x["windDirection"]*pi/180.0,
         windSpeed: x["windSpeed"],
-        uvVal: x["uvIndex"]
+        uvVal: x["uvIndex"],
+        cloudCoverage: x["cloudCoverage"],
       ));
       }
     }
     //for (var i = 0; i < 24; i++) HourData(ind: i, rainChance: (i*i*widget.currentDay.x)%101, windDir: i.toDouble(), windSpeed: i.toDouble(), uvVal: (i*i*i)%10,),
 
     return SizedBox(
-      width: 600,
-      height: 300,
+      height: 500,
       child: ListView(
         itemExtent: 75,
         scrollDirection: Axis.horizontal,
         children: 
-          cols
-        ,
+          cols,
       ),
     );
   }
@@ -144,6 +126,7 @@ class HourData extends StatefulWidget{
   final double windDir;
   final double windSpeed;
   final double uvVal;
+  final double cloudCoverage;
 
 
   const HourData({
@@ -153,7 +136,8 @@ class HourData extends StatefulWidget{
     required this.rainChance,
     required this.windDir,
     required this.windSpeed,
-    required this.uvVal
+    required this.uvVal,
+    required this.cloudCoverage,
   });
 
 
@@ -179,25 +163,55 @@ class _HourDataState extends State<HourData>{
       _ => "error",
     };
 
+    var rainLevel = switch (widget.rainChance){
+      >= 60.0 => 2,
+      >= 30.0 => 1,
+      _ => 0
+    };
+    var cloudLevel = switch (widget.cloudCoverage){
+      >= 75.0 => 2,
+      >= 25.0 => 1,
+      _ => 0
+    };
+
+    var weatherIcon = switch ([rainLevel, cloudLevel]){
+      [2,_] => Icon(Icons.water_drop,size: 50, color: Color.fromRGBO(16, 2, 121, 1),),
+      [1,_] => Icon(Icons.cloudy_snowing,size: 50, color: Color.fromRGBO(16, 2, 121, 1),),
+      [0,2] => Icon(Icons.cloud, size: 50, color: Color.fromRGBO(161, 161, 161, 1),),
+      _ => Icon(Icons.sunny,size: 50,color:Color.fromRGBO(243, 243, 11, 1)),
+    };
+
     return Column(
       children: [
-        Text("${widget.ind.toString().padLeft(2,'0')}:00", style: TextStyle(fontSize: 20),),
-        Icon(Icons.sunny,size: 50,color: Color.fromARGB(255, 243, 243, 11),),
-        Text(((widget.temperature*10.0).roundToDouble()/10.0).toString()),
+        Text("${widget.ind.toString().padLeft(2,'0')}:00", style: TextStyle(fontSize: 22),),
+        Container(padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+          child: Column(children: [
+            Text("${((widget.temperature*10.0).roundToDouble()/10.0)}°C", style: TextStyle(fontSize: 20),),
+            weatherIcon,
+        ],),),
         Text("${widget.rainChance.toString()}%", style: TextStyle(fontSize: 20),),
         
-        Transform.rotate(angle: widget.windDir, child: SizedBox(
-            height: 60,
-            width: 40,
-            child: Stack(children: 
-                    [Align(alignment: Alignment(0.0,1.0), child: Icon(Icons.circle, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
-                    Align(alignment: Alignment(0.0,-1.0), child: Icon(Icons.north, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
-                    Align(alignment: Alignment(0.0, 0.5), child: Transform.rotate(angle: -widget.windDir, 
-                      child: Text(((widget.windSpeed*10.0).roundToDouble()/10.0).toString(), style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),))],),
+        Container(padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 16.0),
+          child: Column(children: [
+            Transform.rotate(angle: widget.windDir, child: SizedBox(
+                height: 60,
+                width: 40,
+                child: Stack(children: 
+                        [Align(alignment: Alignment(0.0,1.0), child: Icon(Icons.circle, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
+                        Align(alignment: Alignment(0.0,-1.0), child: Icon(Icons.north, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
+                        Align(alignment: Alignment(0.0, 0.5), child: Transform.rotate(angle: -widget.windDir, 
+                          child: Text(((widget.windSpeed*10.0).roundToDouble()/10.0).toString(), style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),))],),
         ),),
-        
         Text(windCat, style: TextStyle(fontSize: 20.0),),
-        Text("UV-${(widget.uvVal*10.0).roundToDouble()/10.0}",style: TextStyle(fontSize: 20.0),)
+        ],),),
+
+        Container(padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 16.0),
+          child: Column(
+            spacing: 5.0,
+            children: [
+            Text("UV-${(widget.uvVal*10.0).roundToDouble()/10.0}",style: TextStyle(fontSize: 20.0),),
+            Text("Cloud-${(widget.cloudCoverage*10.0).roundToDouble()/10.0}%", style: TextStyle(fontSize: 20.0),),
+        ],),),
       ],
     );
   }
@@ -292,7 +306,9 @@ class _DaySelectableState extends State<DaySelectable>{
 
   @override
   Widget build(BuildContext buildContext){
-    var day = switch (ind%7) {
+
+    var day = DateTime.now().add(Duration(days: ind));
+    var weekDay = switch (day.weekday-1) {
       0 => "Mon",
       1 => "Tue",
       2 => "Wed",
@@ -307,7 +323,7 @@ class _DaySelectableState extends State<DaySelectable>{
         onPressed: () {updateOnSelect.setState(() {sd.x = ind;});},
         label: Center(
           child: Text(
-            "$day, ${sd.x}",
+            "$weekDay, ${day.day}/${day.month}",
             style: TextStyle(
               color: Color(0xFFFFFFFF),
               fontSize: 20.0
