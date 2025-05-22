@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/weather_provider.dart';
 import 'location_bar.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 const List<String> locations = <String>[
   'CAMBRIDGE',
@@ -45,17 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final currentLocation = Provider.of<LocationProvider>(context).currentLocation;
 
-    final currentWeather = weatherData != null 
-      ? weatherService.getCurrentWeather(weatherData)
-      : null;
-
-    final dailyWeather = weatherData != null 
-      ? weatherService.getDailyWeather(weatherData)
-      : null;
-
-    if (currentWeather == null || dailyWeather == null) {
+    if (weatherData == null) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    final currentWeather = weatherService.getCurrentWeather(weatherData);
+    final dailyWeather = weatherService.getDailyWeather(weatherData);
 
     var windCat = switch (currentWeather["windSpeed"]) {
       >= 0 && < 7 => "still",
@@ -70,6 +66,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     double getWindDirRadians() {
       return currentWeather["windDirection"] * (3.14 / 180);
+    }
+
+    String getPercipitationText() {
+      final h = weatherService.getNextPrecipitationIndex(weatherData);
+      if (h == -1 || h > 6) {
+        return "NO PRECIPITATION FOR THE NEXT 6 HOURS";
+      } else {
+        return "EXPECTED PRECIPITATION IN $h HOUR${h == 1 ? "" : "S"}";
+      }
     }
 
     if (cycleMode) {
@@ -225,23 +230,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: MediaQuery.of(context).size.height * 0.15,
                   height: MediaQuery.of(context).size.height * 0.15,
                   child: Card(
-                    child: Column(
+                    child: Container(
+                      margin: EdgeInsets.all(7),
+                      child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Wrap(
-                            children: [
-                              Text("NO PERCIPITATION FOR AT LEAST 60 MINS", style: TextStyle(fontSize: 10)),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          Icons.auto_graph,
-                          size: 50, 
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        //   child: Wrap(
+                        //     children: [
+                        //       Text("NO PRECIPITATION FOR AT LEAST 60 MINS", style: TextStyle(fontSize: 10)),
+                        //     ],
+                        //   ),
+                        // ),
+                        Text("PRECIPITATION", style: TextStyle(fontSize: 15)),
+                        SizedBox(height: 20),
+                        Text(getPercipitationText(), style: TextStyle(fontSize: 10)),
+                        SizedBox(height: 20),
                       ],
-                    ),
+                    )),
                   ),
 
                 ),

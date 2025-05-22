@@ -145,4 +145,14 @@ class WeatherService {
 
     return hourlyData;
   }
+
+  int getNextPrecipitationIndex(ApiResponse<WeatherApi> response) {
+    final hourlyWeather = getHourlyWeather(response);
+    for (int i = 0; i < hourlyWeather.length; i++) {
+      if (hourlyWeather[i]['precipitationProbability'] > 0.5) {
+        return i;
+      }
+    }
+    return -1; // No precipitation found
+  }
 }
