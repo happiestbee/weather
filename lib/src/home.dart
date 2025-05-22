@@ -156,9 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ]
             ),
-            Icon(
-              Icons.directions_bike,
-              size: 200,
+            Image.asset(
+              "assets/cycle.png",
+              width: 250
             ),
             Text(
               "GOOD DAY FOR A RIDE!",
