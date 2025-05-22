@@ -154,12 +154,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 50, 173, 230),
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.warning),
-          onPressed: () {
-            // Add your onPressed logic here
-          },
-          ),
+        leading: Tooltip(
+          message: "Frost Alert",
+          triggerMode: TooltipTriggerMode.tap,
+          child: Icon(Icons.warning),
+        ),
         title: Center(
           child: LocationBar()
         ),
