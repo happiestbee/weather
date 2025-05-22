@@ -15,7 +15,7 @@ class WeatherProvider with ChangeNotifier {
     try {
       _weatherData = await _weatherService.getWeatherData(latitude, longitude);
       final current = _weatherService.getCurrentWeather(_weatherData!);
-      _currentWeatherCode = current?['weatherCode']?.toInt();
+      _currentWeatherCode = current['weatherCode']?.toInt();
       notifyListeners();
     } catch (e) {
       notifyListeners();

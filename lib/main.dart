@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'src/sample_screen.dart';
-import 'DailyWeather.dart';
+import 'daily_weather.dart';
 
 
 void main() {

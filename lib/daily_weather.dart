@@ -4,6 +4,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/data/weather_provider.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:weather/src/location_bar.dart';
+
 
 class DailyWeather extends StatefulWidget {
   @override
@@ -25,8 +27,10 @@ class _DailyWeatherState extends State<DailyWeather> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      final provider = Provider.of<WeatherProvider>(context, listen: false);
-      provider.fetchWeather(52.21511338264836, 0.09346701373558003);
+      final locationProvider = Provider.of<LocationProvider>(context, listen: false);
+      final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+      final loc = locationProvider.currentLocation;
+      weatherProvider.fetchWeather(loc.latitude, loc.longitude);
     });
   }
 
@@ -95,6 +99,13 @@ Widget _infoBox({required String label, required String value}) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(height: 30),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal:20, vertical:10),
+                  child: LocationBar()
+                ),
+
                 const SizedBox(height: 20),
             
                 SizedBox(

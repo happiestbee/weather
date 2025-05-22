@@ -22,8 +22,8 @@ ThemeData getThemeForWeather(int code) {
   } else if (code >= 71 && code <= 77) {
     // Snowy
     return ThemeData(
-      scaffoldBackgroundColor: Colors.blueGrey.shade100,
-      primaryColor: Colors.blueGrey.shade100,
+      scaffoldBackgroundColor: const Color.fromARGB(255, 157, 171, 178),
+      primaryColor: const Color.fromARGB(255, 157, 171, 178),
       textTheme: const TextTheme(
         bodyMedium: TextStyle(color: Colors.black),
       ),
