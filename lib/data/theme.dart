@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+
+ThemeData getThemeForWeather(int code) {
+  if (code == 0) {
+    // Clear/Sunny
+    return ThemeData(
+      scaffoldBackgroundColor: const Color(0xFF32ADE6),
+      primaryColor: const Color(0xFF32ADE6),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: Colors.white),
+      ),
+    );
+  } else if (code >= 61 && code <= 67) {
+    // Rainy
+    return ThemeData(
+      scaffoldBackgroundColor: Colors.grey.shade700,
+      primaryColor: Colors.grey.shade700,
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: Colors.white),
+      ),
+    );
+  } else if (code >= 71 && code <= 77) {
+    // Snowy
+    return ThemeData(
+      scaffoldBackgroundColor: Colors.blueGrey.shade100,
+      primaryColor: Colors.blueGrey.shade100,
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: Colors.black),
+      ),
+    );
+  } else {
+
+    return ThemeData(
+      scaffoldBackgroundColor: Colors.blueGrey.shade800,
+      primaryColor: Colors.blueGrey.shade800,
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}

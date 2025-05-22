@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:weather/data/weather_service.dart';
 import 'src/home.dart';
-
+import 'package:weather/data/theme.dart';
 import 'package:weather/src/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
 import 'data/weather_provider.dart';
 import 'src/sample_screen.dart';
+import 'DailyWeather.dart';
 
 
 void main() {
@@ -32,8 +34,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final weatherCode = Provider.of<WeatherProvider>(context).currentWeatherCode ?? 0;
+    
     return MaterialApp(
-      home: const SampleScreen(),
+      theme: getThemeForWeather(weatherCode),
+      home: DailyWeather(),
     );
   }
 }
