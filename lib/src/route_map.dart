@@ -67,6 +67,21 @@ class _RouteMapState extends State<RouteMap> {
     }
   }
 
+  void setMarkers({
+    _WeatherMarker? start,
+    _WeatherMarker? destination,
+    List<_WeatherMarker>? waypoints,
+  }) {
+    setState(() {
+      _startMarker = start;
+      _destinationMarker = destination;
+      _waypointMarkers.clear();
+      if (waypoints != null) {
+        _waypointMarkers.addAll(waypoints);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
