@@ -98,6 +98,12 @@ class _RouteScreenState extends State<RouteScreen> {
       currentRoute = route;
       startController.text = currentRoute.start.name;
       destController.text = currentRoute.dest.name;
+      startTimeController.text = currentRoute.startTime != null
+          ? TimeOfDay.fromDateTime(currentRoute.startTime!).format(context)
+          : "";
+      endTimeController.text = currentRoute.endTime != null
+          ? TimeOfDay.fromDateTime(currentRoute.endTime!).format(context)
+          : "";
       // Dispose of the old waypoint controllers there may be more than we need
       for (var controller in waypointControllers) {
         controller.dispose();
