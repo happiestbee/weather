@@ -116,21 +116,21 @@ class _RouteMapState extends State<RouteMap> {
                     onTap: _onMapTapped,
                   ),
                 ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Placeholder(color: Colors.blue),
-                      if (_addingMarker)
-                        Positioned.fill(
-                          child: IgnorePointer(
-                            child: Container(
-                              color: Colors.black.withValues(alpha: 0.4),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+                // Expanded(
+                //   child: Stack(
+                //     children: [
+                //       Placeholder(color: Colors.blue),
+                //       if (_addingMarker)
+                //         Positioned.fill(
+                //           child: IgnorePointer(
+                //             child: Container(
+                //               color: Colors.black.withValues(alpha: 0.4),
+                //             ),
+                //           ),
+                //         ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
             Positioned(

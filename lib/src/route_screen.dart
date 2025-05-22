@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/src/journey.dart';
-import 'package:weather/src/location_bar.dart';
+import 'package:weather/src/route_map.dart';
 import 'package:weather/src/waypointBar.dart';
 
 class RouteScreen extends StatefulWidget {
@@ -22,6 +22,8 @@ class _RouteScreenState extends State<RouteScreen> {
   late TextEditingController destController;
   late TextEditingController startTimeController;
   late TextEditingController endTimeController;
+
+  RouteMap map = RouteMap();
 
   @override
   void initState() {
@@ -130,8 +132,8 @@ class _RouteScreenState extends State<RouteScreen> {
       dropdownRoutes.add(currentRoute);
     }
 
-    List<TimeOfDay?> waypointTimes = _interpolatedWaypointTimes();   
-
+    List<TimeOfDay?> waypointTimes = _interpolatedWaypointTimes(); 
+     
     return Scaffold(      
       body: Column(
         children: [
@@ -192,12 +194,13 @@ class _RouteScreenState extends State<RouteScreen> {
           // Route map placeholder
           // TODO: Replace with actual map widget
           Expanded(
-            child: Container(
-              color: Colors.blueGrey[100],
-              child: Center(
-                child: Text("Map Placeholder"),
-              ),
-            ),
+            // child: Container(
+            //   color: Colors.blueGrey[100],
+            //   child: Center(
+            //     child: Text("Map Placeholder"),
+            //   ),
+            // ),
+            child: map,
           ),
           // Text fields for start, each waypoint, and destination
           Expanded(
