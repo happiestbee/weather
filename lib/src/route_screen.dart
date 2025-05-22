@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather/src/journey.dart';
 import 'package:weather/src/route_map.dart';
-import 'package:weather/src/waypointBar.dart';
+import 'package:weather/src/waypoint_bar.dart';
 
 class RouteScreen extends StatefulWidget {
   const RouteScreen({super.key});
@@ -13,7 +13,6 @@ class RouteScreen extends StatefulWidget {
 
 class _RouteScreenState extends State<RouteScreen> { 
   
-  // TODO: Match name to lat/lon
   Journey currentRoute = Journey();  
   var savedRoutes = <Journey>[];  
 
@@ -21,9 +20,7 @@ class _RouteScreenState extends State<RouteScreen> {
   late List<TextEditingController> waypointControllers;
   late TextEditingController destController;
   late TextEditingController startTimeController;
-  late TextEditingController endTimeController;
-
-  RouteMap map = RouteMap();
+  late TextEditingController endTimeController;  
 
   @override
   void initState() {
@@ -33,11 +30,19 @@ class _RouteScreenState extends State<RouteScreen> {
 
   // Initialize the text controllers for the start, waypoints, and destination text fields
   void _initControllers() {
-    startController = TextEditingController(text: currentRoute.start.name);
+    startController = TextEditingController(
+      text: (currentRoute.start!=null) 
+        ? currentRoute.start!.name 
+        : ""
+    );
     waypointControllers = currentRoute.waypoints.map(
       (w) => TextEditingController(text: w.name))
       .toList();
-    destController = TextEditingController(text: currentRoute.dest.name);
+    destController = TextEditingController(
+      text: (currentRoute.dest!=null) 
+        ? currentRoute.dest!.name 
+        : ""
+    );
     startTimeController = TextEditingController(
       text: currentRoute.startTime != null
           ? currentRoute.startTime!.toString()
@@ -98,22 +103,8 @@ class _RouteScreenState extends State<RouteScreen> {
   void changeRoute(Journey route) {
     setState(() {
       currentRoute = route;
-      startController.text = currentRoute.start.name;
-      destController.text = currentRoute.dest.name;
-      startTimeController.text = currentRoute.startTime != null
-          ? TimeOfDay.fromDateTime(currentRoute.startTime!).format(context)
-          : "";
-      endTimeController.text = currentRoute.endTime != null
-          ? TimeOfDay.fromDateTime(currentRoute.endTime!).format(context)
-          : "";
-      // Dispose of the old waypoint controllers there may be more than we need
-      for (var controller in waypointControllers) {
-        controller.dispose();
-      }
-      // Create new waypoint controllers for the new route
-      waypointControllers = currentRoute.waypoints.map(
-        (w) => TextEditingController(text: w.name))
-        .toList();
+      _disposeControllers();
+      _initControllers();
     });
   }
 
@@ -133,10 +124,19 @@ class _RouteScreenState extends State<RouteScreen> {
     }
 
     List<TimeOfDay?> waypointTimes = _interpolatedWaypointTimes(); 
+
      
     return Scaffold(      
       body: Column(
         children: [
+          Expanded(
+            child: RouteMap(
+              currentRoute: currentRoute,
+              // On changed callback to update the controllers and route 
+              // when a marker is added or deleted
+              onChanged: () => setState(() {_disposeControllers(); _initControllers();}),
+            ),
+          ),
           Row(
             children: [
               // Save button in the top left
@@ -191,17 +191,6 @@ class _RouteScreenState extends State<RouteScreen> {
               ),
             ],  
           ),
-          // Route map placeholder
-          // TODO: Replace with actual map widget
-          Expanded(
-            // child: Container(
-            //   color: Colors.blueGrey[100],
-            //   child: Center(
-            //     child: Text("Map Placeholder"),
-            //   ),
-            // ),
-            child: map,
-          ),
           // Text fields for start, each waypoint, and destination
           Expanded(
             child: Container(
@@ -216,8 +205,9 @@ class _RouteScreenState extends State<RouteScreen> {
                       timeController: startTimeController,
                       route: currentRoute,                    
                       type: LocationType.start,
-                      onChanged: () =>setState(() {}),                      
-                    ),                                      
+                      onChanged: () => setState(() {}),                      
+                    ), 
+                    SizedBox(height: 16.0),                                     
                     // List of text fields for waypoints
                     ...List.generate(
                       currentRoute.waypoints.length,
@@ -233,15 +223,7 @@ class _RouteScreenState extends State<RouteScreen> {
                       ),                        
                     ),                    
                     // Button to add a new waypoint
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          currentRoute.addNewWaypoint();
-                          waypointControllers.add(TextEditingController());
-                        });
-                      },
-                      child: Text("Add Waypoint"),
-                    ),
+                    SizedBox(height: 16.0),
                     // Destination text field                    
                     WaypointBar(
                       locationController: destController,

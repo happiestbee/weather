@@ -46,21 +46,39 @@ class _WaypointBarState extends State<WaypointBar> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool locationExists;
+    switch(widget.type) {
+      case LocationType.start:
+        locationExists = widget.route.start != null;
+      case LocationType.waypoint:
+        locationExists = true; // if the waypoint did not exist, it would not be shown 
+      case LocationType.dest:
+        locationExists = widget.route.dest != null;
+    };
+
     return Row(
       children: [
         Expanded(     
           child: TextField(
             controller: widget.locationController,
-            decoration: _inputDecoration("Waypoint"),
+            decoration: _inputDecoration(
+              widget.type == LocationType.start
+                  ? "Start"
+                  : widget.type == LocationType.waypoint
+                      ? "Waypoint ${widget.waypointIndex! + 1}"
+                      : "Destination",
+            ),
+            enabled: locationExists,
             onChanged: (value) {
               setState(() {
                 switch (widget.type) {
                   case LocationType.start:
-                    widget.route.setStart(value);
+                    widget.route.setStartName(value);
                   case LocationType.waypoint:
-                    widget.route.setWaypoint(value, widget.waypointIndex!);
+                    widget.route.setWaypointName(value, widget.waypointIndex!);
                   case LocationType.dest:
-                    widget.route.setDest(value);
+                    widget.route.setDestName(value);
                 }
                 widget.onChanged();
               });
@@ -94,7 +112,6 @@ class _WaypointBarState extends State<WaypointBar> {
                       switch (widget.type) {
                         case LocationType.start:
                           widget.route.startTime = dateTime;
-                          print(widget.route.startTime);
                         case LocationType.waypoint:
                           break;
                         case LocationType.dest:

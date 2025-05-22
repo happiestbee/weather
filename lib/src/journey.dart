@@ -1,81 +1,111 @@
 import 'dart:math';
-import 'package:weather/src/location_bar.dart';
+import 'package:weather/src/route_map.dart';
 
 class Journey {
   
-  LocationCoords start = LocationCoords(
-    name: "", 
-    latitude: .0, 
-    longitude: .0,
-  );
+  // LocationCoords start = LocationCoords(
+  //   name: "", 
+  //   latitude: .0, 
+  //   longitude: .0,
+  // );
+  
 
-  var waypoints = <LocationCoords>[];
+  // var waypoints = <LocationCoords>[];
 
-  LocationCoords dest = LocationCoords(
-    name: "", 
-    latitude: .0, 
-    longitude: .0,
-  );
+  // LocationCoords dest = LocationCoords(
+  //   name: "", 
+  //   latitude: .0, 
+  //   longitude: .0,
+  // );
+
+  WeatherMarker? start;
+  List<WeatherMarker> waypoints = [];
+  WeatherMarker? dest;
 
   DateTime? startTime;
   DateTime? endTime;
 
-  Journey() {
-    waypoints = List<LocationCoords>.empty(growable: true);
-  }
+  // Journey() {
+  //   waypoints = List<LocationCoords>.empty(growable: true);
+  // }
 
-  Future<LocationCoords> createLocationFromName(String name) async {
-    return LocationCoords(
-        name: name,
-        latitude: .0,
-        longitude: .0,
-      );
-      // TODO: Use geocoding to get the latitude and longitude      
-    }
+  Journey();
+
+  // Future<LocationCoords> createLocationFromName(String name) async {
+  //   return LocationCoords(
+  //       name: name,
+  //       latitude: .0,
+  //       longitude: .0,
+  //     );
+  //     
+  //   }
   
-  Future<void> setStart(String start) async {
-    this.start=await createLocationFromName(start);
-  }
+  // Future<void> setStart(String start) async {
+  //   this.start=await createLocationFromName(start);
+  // }
 
-  Future<void> setDest(String dest) async {
-    this.dest = await createLocationFromName(dest);
-  }
+  // Future<void> setDest(String dest) async {
+  //   this.dest = await createLocationFromName(dest);
+  // }
 
-  Future<void> addWaypoint(String waypointName, {int i = -1}) async{
-    LocationCoords waypoint = await createLocationFromName(waypointName);
-    if (i == -1) {
-      waypoints.add(waypoint);
+  Future<void> addWaypoint(WeatherMarker marker, {int? i}) async{
+    if (i == null) {
+      waypoints.add(marker);
     } else {
-      waypoints.insert(i, waypoint);
+      waypoints.insert(i, marker);
     }
   }
-
-  void addNewWaypoint() {
-    waypoints.add(LocationCoords(
-      name: "", 
-      latitude: .0, 
-      longitude: .0,
-    ));
-  }
-
-  Future<void> setWaypoint(String waypointName, int i) async {
-    LocationCoords waypoint = await createLocationFromName(waypointName);
-    if (i < waypoints.length) {
-      waypoints[i] = waypoint;
-    }
-  }
-
+  
   void removeWaypoint(int i) {
     if (i < waypoints.length) {
       waypoints.removeAt(i);
     }
   }
 
-  String shortenedName(LocationCoords location) {
-    if (location.name.isEmpty) {
+  // void addNewWaypoint() {
+  //   waypoints.add(LocationCoords(
+  //     name: "", 
+  //     latitude: .0, 
+  //     longitude: .0,
+  //   ));
+  // }
+
+  // Future<void> setWaypoint(String waypointName, int i) async {
+  //   LocationCoords waypoint = await createLocationFromName(waypointName);
+  //   if (i < waypoints.length) {
+  //     waypoints[i] = waypoint;
+  //   }
+  // }
+
+  // void removeWaypoint(int i) {
+  //   if (i < waypoints.length) {
+  //     waypoints.removeAt(i);
+  //   }
+  // }
+
+  String shortenedName(WeatherMarker? marker) {
+    if (marker == null || marker.name.isEmpty) {
       return "???";
     }
-    return location.name.substring(0, min(3,location.name.length));
+    return marker.name.substring(0, min(3, marker.name.length)).toUpperCase();
+  }
+
+  void setStartName(String name) {
+    if (start != null) {
+      start!.name = name;
+    }
+  }
+
+  void setDestName(String name) {
+    if (dest != null) {
+      dest!.name = name;
+    }
+  }
+
+  void setWaypointName(String name, int i) {
+    if (i < waypoints.length) {
+      waypoints[i].name = name;
+    }
   }
 
   @override
