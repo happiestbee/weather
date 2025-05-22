@@ -46,12 +46,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final currentLocation = Provider.of<LocationProvider>(context).currentLocation;
 
-    if (weatherData == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    var dailyWeather, currentWeather;
 
-    final currentWeather = weatherService.getCurrentWeather(weatherData);
-    final dailyWeather = weatherService.getDailyWeather(weatherData);
+    if (weatherData == null) {
+      // return const Center(child: CircularProgressIndicator());
+       currentWeather = {
+        "temperature": 15,
+        "windSpeed": 13,
+        "windDirection": 20,
+        "weather_code": 0,
+        "windDirectionOrdinal": "N",
+      };
+      dailyWeather = [
+        {
+          "maxTemperature": 20,
+          "minTemperature": 10,
+          "precipitationProbabilityMax": 0,
+          "uvIndexMax": 5,
+          "windSpeedMax": 15,
+          "windDirectionDominant": "N",
+          "weatherCode": 0,
+          "sunrise": DateTime.now(),
+          "sunset": DateTime.now().add(Duration(hours: 12)),
+          "precipitationSum": 0,
+        }
+      ];
+    } else {
+      currentWeather = weatherService.getCurrentWeather(weatherData);
+      dailyWeather = weatherService.getDailyWeather(weatherData);
+    }
 
     var windCat = switch (currentWeather["windSpeed"]) {
       >= 0 && < 7 => "still",
@@ -69,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     String getPercipitationText() {
-      final h = weatherService.getNextPrecipitationIndex(weatherData);
+      final h = weatherData == null ? 0 : weatherService.getNextPrecipitationIndex(weatherData);
       if (h == -1 || h > 6) {
         return "NO PRECIPITATION FOR THE NEXT 6 HOURS";
       } else {
@@ -129,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 50, 173, 230),
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.warning),
@@ -157,11 +181,18 @@ class _HomeScreenState extends State<HomeScreen> {
             Stack(
               alignment: Alignment.center,
               children: [
-                Icon(
-                  Icons.sunny,
-                  size: 200,
-                  color: Colors.yellow,
-                ),
+                if (currentWeather["weather_code"] >= 50) 
+                  Icon(
+                    Icons.cloud,
+                    size: 200,
+                    color: Colors.grey,
+                  )
+                else 
+                  Icon(
+                    Icons.sunny,
+                    size: 200,
+                    color: Colors.yellow,
+                  ),
                 Text(
                   "${currentWeather["temperature"].round()}°C",
                   style: TextStyle(color: Colors.black, fontSize: 36),
