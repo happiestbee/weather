@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import '../daily_weather.dart';
+import 'package:weather/src/route_screen.dart';
+import 'sample_screen.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -23,47 +25,38 @@ class _MainPageState extends State<MainPage> {
         page = HomeScreen(); // home screen
         break;
       case 1:
-        page = Placeholder(color: Colors.blue); // hourly
+        page = SampleScreen(); // hourly
         break;
       case 2:
         page = DailyWeather(); // daily
         break;
       case 3:
-        page = Placeholder(color: Colors.orange); // route
+        page = RouteScreen(); // route
         break;
       default:
         throw UnsupportedError('no widget for $selectedIndex');
     }
 
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(            
-              
-              child: page,
-            ),
-          ),
-          
-          SafeArea(
-            child: NavigationBar(
-              destinations: [
-                NavigationDestination(icon: Icon(Icons.house), label: 'Home'),
-                NavigationDestination(icon: Icon(Icons.access_time_rounded), label: 'Hourly'),
-                NavigationDestination(icon: Icon(Icons.calendar_today), label: 'Daily'),
-                NavigationDestination(icon: Icon(Icons.map_outlined), label: 'Route'),
-              ],
-              selectedIndex: selectedIndex,
-              onDestinationSelected: (value) {
-                setState((){
-                  selectedIndex = value;
-                });
-              },
-            )
-          )
+      bottomNavigationBar: NavigationBar(
+        destinations: [
+          NavigationDestination(icon: Icon(Icons.house), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.access_time_rounded), label: 'Hourly'),
+          NavigationDestination(icon: Icon(Icons.calendar_today), label: 'Daily'),
+          NavigationDestination(icon: Icon(Icons.map_outlined), label: 'Route'),
         ],
-      )
-    );   
-
+        selectedIndex: selectedIndex,
+        onDestinationSelected: (value) {
+          setState((){
+            selectedIndex = value;
+          });
+        },
+      ),
+      body: Expanded(
+        child: Container(                  
+          child: page,
+        ),
+      ),
+    );  
   }
 }

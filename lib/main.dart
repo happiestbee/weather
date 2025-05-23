@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:weather/data/weather_service.dart';
-import 'src/home.dart';
 import 'package:weather/data/theme.dart';
 import 'package:weather/src/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/src/location_bar.dart';
+import 'package:weather/src/route_manager.dart';
 import 'data/weather_provider.dart';
-import 'src/sample_screen.dart';
-import 'daily_weather.dart';
-import 'package:weather/src/main_page.dart';
 
 void main() {
   runApp(
@@ -22,12 +18,12 @@ void main() {
           update: (context, weatherProvider, previous) => 
             previous ?? LocationProvider(weatherProvider),
         ),
+        ChangeNotifierProvider(create: (_) => RouteManager()),
       ],
       child: const MainApp(),
     ),
   );
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

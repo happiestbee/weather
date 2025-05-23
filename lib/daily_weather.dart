@@ -8,6 +8,8 @@ import 'package:weather/src/location_bar.dart';
 
 
 class DailyWeather extends StatefulWidget {
+  const DailyWeather({super.key});
+
   @override
   State<DailyWeather> createState() => _DailyWeatherState();
 }
