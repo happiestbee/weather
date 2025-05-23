@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather/src/hourly_screen.dart';
 import 'home.dart';
 import '../daily_weather.dart';
 import 'package:weather/src/route_screen.dart';
@@ -25,7 +26,7 @@ class _MainPageState extends State<MainPage> {
         page = HomeScreen(); // home screen
         break;
       case 1:
-        page = SampleScreen(); // hourly
+        page = HourlyScreen(); // hourly
         break;
       case 2:
         page = DailyWeather(); // daily

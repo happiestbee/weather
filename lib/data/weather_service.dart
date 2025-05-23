@@ -130,7 +130,7 @@ class WeatherService {
 
     return dailyData;
   }
-
+  
   // Helper function to extract hourly weather data
   List<Map<String, dynamic>> getHourlyWeather(ApiResponse<WeatherApi> response) {
     final hourlyData = <Map<String, dynamic>>[];
@@ -142,7 +142,8 @@ class WeatherService {
         'precipitationProbability': response.hourlyData[WeatherHourly.precipitation_probability]?.values[time],
         'uvIndex': response.hourlyData[WeatherHourly.uv_index]?.values[time],
         'windSpeed': response.hourlyData[WeatherHourly.wind_speed_10m]?.values[time],
-        'windDirection': response.hourlyData[WeatherHourly.wind_direction_10m]?.values[time],   
+        'windDirection': response.hourlyData[WeatherHourly.wind_direction_10m]?.values[time],
+        'cloudCoverage': response.hourlyData[WeatherHourly.cloud_cover]?.values[time],
       });
     }
 
