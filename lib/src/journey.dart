@@ -1,22 +1,7 @@
 import 'dart:math';
 import 'package:weather/src/route_map.dart';
 
-class Journey {
-  
-  // LocationCoords start = LocationCoords(
-  //   name: "", 
-  //   latitude: .0, 
-  //   longitude: .0,
-  // );
-  
-
-  // var waypoints = <LocationCoords>[];
-
-  // LocationCoords dest = LocationCoords(
-  //   name: "", 
-  //   latitude: .0, 
-  //   longitude: .0,
-  // );
+class Journey { 
 
   WeatherMarker? start;
   List<WeatherMarker> waypoints = [];
@@ -25,28 +10,7 @@ class Journey {
   DateTime? startTime;
   DateTime? endTime;
 
-  // Journey() {
-  //   waypoints = List<LocationCoords>.empty(growable: true);
-  // }
-
   Journey();
-
-  // Future<LocationCoords> createLocationFromName(String name) async {
-  //   return LocationCoords(
-  //       name: name,
-  //       latitude: .0,
-  //       longitude: .0,
-  //     );
-  //     
-  //   }
-  
-  // Future<void> setStart(String start) async {
-  //   this.start=await createLocationFromName(start);
-  // }
-
-  // Future<void> setDest(String dest) async {
-  //   this.dest = await createLocationFromName(dest);
-  // }
 
   Future<void> addWaypoint(WeatherMarker marker, {int? i}) async{
     if (i == null) {
@@ -61,27 +25,6 @@ class Journey {
       waypoints.removeAt(i);
     }
   }
-
-  // void addNewWaypoint() {
-  //   waypoints.add(LocationCoords(
-  //     name: "", 
-  //     latitude: .0, 
-  //     longitude: .0,
-  //   ));
-  // }
-
-  // Future<void> setWaypoint(String waypointName, int i) async {
-  //   LocationCoords waypoint = await createLocationFromName(waypointName);
-  //   if (i < waypoints.length) {
-  //     waypoints[i] = waypoint;
-  //   }
-  // }
-
-  // void removeWaypoint(int i) {
-  //   if (i < waypoints.length) {
-  //     waypoints.removeAt(i);
-  //   }
-  // }
 
   String shortenedName(WeatherMarker? marker) {
     if (marker == null || marker.name.isEmpty) {
@@ -112,5 +55,4 @@ class Journey {
   String toString(){
       return "${shortenedName(start)} - ${shortenedName(dest)}";
   }
-
 }
