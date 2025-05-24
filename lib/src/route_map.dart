@@ -27,9 +27,6 @@ class _RouteMapState extends State<RouteMap> {
 
   bool _addingMarker = false;
   MarkerType? _markerTypeToAdd;
-  // WeatherMarker? _startMarker;
-  // WeatherMarker? _destinationMarker;
-  // final List<WeatherMarker> _waypointMarkers = [];
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -37,6 +34,8 @@ class _RouteMapState extends State<RouteMap> {
 
   Future<void> _onMapTapped(LatLng position) async {
     if (_addingMarker && _markerTypeToAdd != null) {
+      // If a marker is being added, fetch the weather data for the tapped position
+      // and create a WeatherMarker for the correct type
       setState(() {
         _addingMarker = false;
       });
@@ -95,8 +94,9 @@ class _RouteMapState extends State<RouteMap> {
             position: widget.currentRoute.start!.position,
             infoWindow: InfoWindow(
               // Use the temperature from the WeatherMarker object
-              // May want to display more weather data
-              title: widget.currentRoute.start!.temperature != null ? 'Start: ${widget.currentRoute.start!.temperature!.toStringAsFixed(1)}°C' : 'Start: Loading...'),
+              title: widget.currentRoute.start!.temperature != null 
+                ? '${widget.currentRoute.start!.name}: ${widget.currentRoute.start!.temperature!.toStringAsFixed(1)}°C' 
+                : 'Start: Loading...'),
             icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           )
         : null; 
@@ -106,7 +106,9 @@ class _RouteMapState extends State<RouteMap> {
           markerId: const MarkerId('destination_marker'),
           position: widget.currentRoute.dest!.position,
           infoWindow: InfoWindow(
-            title: widget.currentRoute.dest!.temperature != null ? 'Destination: ${widget.currentRoute.dest!.temperature!.toStringAsFixed(1)}°C' : 'Destination: Loading...'),
+            title: widget.currentRoute.dest!.temperature != null 
+              ? '${widget.currentRoute.dest!.name}: ${widget.currentRoute.dest!.temperature!.toStringAsFixed(1)}°C' 
+              : 'Destination: Loading...'),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         )
       : null;
@@ -133,6 +135,7 @@ class _RouteMapState extends State<RouteMap> {
               children: [
                 Expanded(
                   flex: 2,
+                  // The GoogleMap widget that displays the map and markers
                   child: GoogleMap(
                     onMapCreated: _onMapCreated,
                     initialCameraPosition: CameraPosition(
@@ -153,18 +156,22 @@ class _RouteMapState extends State<RouteMap> {
             Positioned(
               top: 40,
               right: 20,
+              // Floating action button to add markers
               child: CircleAvatar(
                 radius: 21,
                 backgroundColor: Colors.green[700],
                 child: PopupMenuButton<MarkerType>(
                   color: Colors.white,
-                  icon: const Icon(Icons.add, color: Colors.white, size: 24),
+                  icon: const Icon(Icons.add, color: Colors.white, size: 24),                  
                   onSelected: (MarkerType type) {
+                    // When a marker type is selected, set the state to indicate
+                    // that a marker is being added and store the type
                     setState(() {
                       _addingMarker = true;
                       _markerTypeToAdd = type;
                     });
                   },
+                  // Show the popup menu with options to add start, waypoint, or destination markers
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: MarkerType.start,

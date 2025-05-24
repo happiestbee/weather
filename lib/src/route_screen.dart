@@ -26,10 +26,17 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
 
   @override
   void initState() {
-    super.initState();
-    final routeManager = Provider.of<RouteManager>(context, listen: false);
+    super.initState(); 
+  }
 
-    _initControllers(routeManager);  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final routeManager = Provider.of<RouteManager>(context, listen: false);
+    
+    // Initialize the text controllers    
+    _initControllers(routeManager);
+    
   }
 
   // return a text controller for the location text field of a given marker
@@ -81,11 +88,17 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
   List<TimeOfDay?> _interpolatedWaypointTimes(RouteManager rm) {
     final currentRoute = rm.currentRoute;
     if (currentRoute.startTime == null || currentRoute.endTime == null || currentRoute.waypoints.isEmpty) {
+      // Cannot calculate times if start or end time is null or no waypoints
       return List.filled(currentRoute.waypoints.length, null);
     }
     final start = currentRoute.startTime!;
     final end = currentRoute.endTime!;
-    final total = end.difference(start).inMinutes;
+    final total = end.difference(start).inMinutes; // total duration in minutes
+    if (total < 0) {
+      // If the end time is after the start time, return null for all waypoints
+      return List.filled(currentRoute.waypoints.length, null);
+    }
+
     final n = currentRoute.waypoints.length + 1;
     return List.generate(
       currentRoute.waypoints.length,
@@ -174,12 +187,14 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
                     hint: Text("Select Route"),
                     value: currentRoute,                    
                     items: dropdownRoutes.map((Journey r) {
+                      // map each joruney to a dropDownMenu item for that journey
                       return DropdownMenuItem<Journey>(
                         value: r,
                         child: Text(r.toString()),
                       );
                     }).toList(),
                     onChanged: (Journey? selected) {
+                      // When a route is selected, change the current route
                       if (selected != null) {
                         setState(() => changeRoute(routeManager, selected));                        
                       }
@@ -217,6 +232,7 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
                       timeController: startTimeController,
                       route: currentRoute,                    
                       type: LocationType.start,
+                      // onChanged used so this widget can be rebuilt when the waypointBar changes
                       onChanged: () => setState(() {}),                      
                     ), 
                     SizedBox(height: 16.0),                                     
@@ -229,7 +245,7 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
                         route: currentRoute,
                         type: LocationType.waypoint,
                         waypointIndex: i,
-                        onChanged: () => setState(() {}),
+                        onChanged: () => setState(() {}), 
                       ),                        
                     ),                    
                     // Button to add a new waypoint

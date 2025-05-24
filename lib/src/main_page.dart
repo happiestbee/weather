@@ -3,7 +3,6 @@ import 'package:weather/src/hourly_screen.dart';
 import 'home.dart';
 import '../daily_weather.dart';
 import 'package:weather/src/route_screen.dart';
-import 'sample_screen.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});

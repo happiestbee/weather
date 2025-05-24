@@ -41,7 +41,10 @@ class _WaypointBarState extends State<WaypointBar> {
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       filled: true,
-      fillColor: const Color.fromARGB(255, 183, 211, 224),
+      fillColor: Theme.of(context).primaryColor, //Color.fromARGB(255, 183, 211, 224),
+      labelStyle: TextStyle(
+        color: Theme.of(context).textTheme.bodyMedium?.color,
+      ),
     );
   }
 
@@ -80,6 +83,9 @@ class _WaypointBarState extends State<WaypointBar> {
             controller: widget.locationController,
             decoration: _inputDecoration(_label),            
             enabled: locationExists,
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+            ),
             onChanged: (value) {
               // update the name of the location based on the type
               setState(() {
@@ -105,6 +111,9 @@ class _WaypointBarState extends State<WaypointBar> {
             decoration: _inputDecoration("Time"),
             readOnly: true,
             enabled: locationExists,
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+            ),
             onTap: () {
               setState(() {       
                 // only able to edit time for start and destination
