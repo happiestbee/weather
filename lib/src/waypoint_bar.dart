@@ -41,7 +41,7 @@ class _WaypointBarState extends State<WaypointBar> {
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       filled: true,
-      fillColor: Theme.of(context).primaryColor, //Color.fromARGB(255, 183, 211, 224),
+      fillColor: Theme.of(context).primaryColor,
       labelStyle: TextStyle(
         color: Theme.of(context).textTheme.bodyMedium?.color,
       ),
@@ -82,7 +82,7 @@ class _WaypointBarState extends State<WaypointBar> {
           child: TextField( // text field for the location name
             controller: widget.locationController,
             decoration: _inputDecoration(_label),            
-            enabled: locationExists,
+            enabled: locationExists,            
             style: TextStyle(
               color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
@@ -104,7 +104,7 @@ class _WaypointBarState extends State<WaypointBar> {
           ),          
         ),
         const SizedBox(width: 8),
-        SizedBox(
+        SizedBox( // text field for the time of the location
           width: MediaQuery.of(context).size.width * 0.2,
           child: TextField(            
             controller: widget.timeController,

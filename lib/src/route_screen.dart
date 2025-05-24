@@ -185,10 +185,14 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
                   alignment: Alignment.center,
                   child: DropdownButton<Journey>(
                     hint: Text("Select Route"),
-                    value: currentRoute,                    
+                    value: currentRoute,
+                    dropdownColor: Theme.of(context).primaryColor,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
                     items: dropdownRoutes.map((Journey r) {
                       // map each joruney to a dropDownMenu item for that journey
-                      return DropdownMenuItem<Journey>(
+                      return DropdownMenuItem<Journey>(                        
                         value: r,
                         child: Text(r.toString()),
                       );
