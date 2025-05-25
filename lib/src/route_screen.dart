@@ -243,16 +243,21 @@ class _RouteScreenState extends State<RouteScreen> {  // Instance of the route m
                     // List of text fields for waypoints
                     ...List.generate(
                       currentRoute.waypoints.length,
-                      (i) => WaypointBar(
-                        locationController: waypointControllers[i],
-                        timeController: TextEditingController(text: waypointTimes[i]?.format(context)),
-                        route: currentRoute,
-                        type: LocationType.waypoint,
-                        waypointIndex: i,
-                        onChanged: () => setState(() {}), 
+                      (i) => Column(
+                        children: [
+                          WaypointBar(
+                            locationController: waypointControllers[i],
+                            timeController: TextEditingController(text: waypointTimes[i]?.format(context)),
+                            route: currentRoute,
+                            type: LocationType.waypoint,
+                            waypointIndex: i,
+                            onChanged: () => setState(() {}), 
+                          ),
+                          // Add a separator between waypoints
+                          if (i != currentRoute.waypoints.length - 1) SizedBox(height: 8.0),
+                        ],
                       ),                        
-                    ),                    
-                    // Button to add a new waypoint
+                    ),     
                     SizedBox(height: 16.0),
                     // Destination text field                    
                     WaypointBar(
