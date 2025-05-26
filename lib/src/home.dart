@@ -137,6 +137,21 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+    String getAlertMessage() {
+      final code = currentWeather["weatherCode"]?.toInt() ?? 0;
+      if (code == 0) return "No weather alerts";
+      if (code >= 1 && code <= 3) return "No weather alerts";
+      if (code >= 45 && code <= 48) return "Foggy conditions, cycle carefully";
+      if (code >= 51 && code <= 57) return "Light rain expected";
+      if (code >= 61 && code <= 65) return "Rain expected";
+      if (code >= 66 && code <= 67) return "Heavy rain possible";
+      if (code >= 71 && code <= 77) return "Snowy conditions, roads may be slippery";
+      if (code >= 80 && code <= 82) return "Showers expected";
+      if (code >= 85 && code <= 86) return "Heavy snow possible, roads may be icy";
+      if (code == 95 || code == 96 || code == 99) return "Thunderstorm possible!";
+      return "Weather alert code: $code";
+    }
+
     if (cycleMode) {
       return Scaffold(
         appBar: AppBar(
@@ -194,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: Tooltip(
-          message: "Frost Alert",
+          message: getAlertMessage(),
           triggerMode: TooltipTriggerMode.tap,
           child: Icon(Icons.warning),
         ),
