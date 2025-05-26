@@ -238,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   getWeatherIcon(),
                   Text(
                     "${currentWeather["temperature"].round()}°C",
-                    style: TextStyle(color: Colors.black, fontSize: 34),
+                    style: TextStyle(color: Colors.black, fontSize: 34, fontWeight: FontWeight.bold),
                   )
                 ]
               ),
@@ -247,9 +247,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 "assets/cycle.png",
                 width: 250
               ),
-              Text(
-                getCyclingText(),
-                style: TextStyle(color: Colors.black, fontSize: 24),
+              DecoratedBox(
+                decoration: BoxDecoration(border: Border.symmetric(horizontal: BorderSide(color: Colors.white)), color: Color.fromARGB(60,209,238, 252)),
+                child: SizedBox(
+                  height:35,
+                  width: double.infinity,
+                  child: Text(
+                    getCyclingText(),
+                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               SizedBox(height: 15),
               Row(
@@ -257,12 +265,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     "HI: ${dailyWeather[0]["maxTemperature"].round()}°C",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 20),
                   Text(
                     "LO: ${dailyWeather[0]["minTemperature"].round()}°C",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   )
                 ],
               ),
@@ -312,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text("PRECIPITATION", style: TextStyle(fontSize: 15)),
                             SizedBox(height: 20),
-                            Text(getPercipitationText(), style: TextStyle(fontSize: 10)),
+                            Text(getPercipitationText(), style: TextStyle(fontSize: 10), textAlign: TextAlign.center,),
                             SizedBox(height: 20),
                           ],
                         ),
