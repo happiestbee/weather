@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/weather_provider.dart';
 import 'location_bar.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-
-const List<String> locations = <String>[
-  'CAMBRIDGE',
-  'BOSTON',
-  'NEW YORK',
-];
+import 'package:weather_icons/weather_icons.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,7 +19,6 @@ final windDirMap = {
 };
 
 class _HomeScreenState extends State<HomeScreen> {
-  String location = locations[0];
   bool cycleMode = false;
 
   @override
@@ -100,6 +93,50 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+    Icon getWeatherIcon() {
+      final code = currentWeather["weatherCode"]?.toInt() ?? 0;
+      final size = 180.0;
+      if (code == 0) return Icon(Icons.sunny, size: size, color: Colors.amber);
+      if (code == 1 || code == 2) return Icon(WeatherIcons.day_cloudy, size: size, color: Colors.blueGrey);
+      if (code == 3) return Icon(WeatherIcons.cloud, size: size, color: Colors.grey);
+      if (code == 45 || code == 48) return Icon(WeatherIcons.fog, size: size, color: Colors.grey.shade400);
+      if (code >= 51 && code <= 57) return Icon(WeatherIcons.sprinkle, size: size, color: Colors.lightBlueAccent);
+      if (code >= 61 && code <= 65) return Icon(WeatherIcons.rain, size: size, color: Colors.blueAccent);
+      if (code >= 66 && code <= 67) return Icon(WeatherIcons.rain_mix, size: size, color: Colors.blueAccent);
+      if (code >= 71 && code <= 75) return Icon(WeatherIcons.snow, size: size, color: Colors.lightBlue.shade100);
+      if (code == 77) return Icon(WeatherIcons.snowflake_cold, size: size, color: Colors.cyan);
+      if (code >= 80 && code <= 82) return Icon(WeatherIcons.showers, size: size, color: Colors.blue.shade700);
+      if (code >= 85 && code <= 86) return Icon(WeatherIcons.snow_wind, size: size, color: Colors.blueGrey.shade200);
+      if (code == 95) return Icon(WeatherIcons.thunderstorm, size: size, color: Colors.deepPurple);
+      if (code == 96 || code == 99) return Icon(WeatherIcons.thunderstorm, size: size, color: Colors.deepPurple);
+      return Icon(WeatherIcons.na, size: size, color: Colors.black26);
+    }
+
+    String getCyclingText() {
+      final code = currentWeather["weatherCode"]?.toInt() ?? 0;
+      if (code == 0) {
+        return "SUNNY: GOOD DAY FOR A RIDE!";
+      } else if (code == 1 || code == 2 || code == 3) {
+        return "CLOUDY: GOOD DAY FOR A RIDE!";
+      } else if (code == 45 || code == 48) {
+        return "FOGGY: BE CAUTIOUS!";
+      } else if (code >= 50 && code <= 59) {
+        return "DRIZZLE: BE CAUTIOUS!";
+      } else if (code >= 60 && code <= 69) {
+        return "RAIN: BE CAUTIOUS!";
+      } else if (code >= 70 && code <= 79) {
+        return "SNOW: ROADS MAY BE ICY!";
+      } else if (code >= 80 && code <= 82) {
+        return "SHOWERS: BE CAUTIOUS!";
+      } else if (code >= 85 && code <= 86) {
+        return "HEAVY SNOW: ROADS MAY BE ICY!";
+      } else if (code == 95 || code == 96 || code == 99) {
+        return "THUNDERSTORM: STAY INDOORS!";
+      } else {
+        return "CONSIDER ANOTHER DAY!";
+      }
+    }
+
     if (cycleMode) {
       return Scaffold(
         appBar: AppBar(
@@ -129,22 +166,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(color: Colors.black, fontSize: 100),
               ),
               Text("$windCat WINDS, ${currentWeather["windDirectionOrdinal"]}", style: TextStyle(fontSize: 40)),
-              SizedBox(height: 30),
-              Image.asset(
-                "assets/cycle.png",
-                width: 200,
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset(
+                    "assets/compass.png",
+                    width: 350,
+                  ),
+                 Transform.translate(
+                    offset: Offset(0, 33), // Adjust the offset to position the icon correctly
+                    child: Transform.rotate(
+                      angle: getWindDirRadians(),
+                      child: Transform.scale(
+                        scaleY: 2.0,
+                        child: Icon(Icons.north, size: 120, color: Color.fromARGB(255, 0, 0, 0))
+                      ),
+                    ),
+                  )
+                ],    
               ),
-              SizedBox(height: 20),
-              Card(
-                child: Column(
-                  children: [
-                    Text("AT YOUR NEXT CHECKPOINT:", style: TextStyle(fontSize: 25)),
-                    Text("??°C", style: TextStyle(fontSize: 25)),
-                    Text("??? WINDS, ???", style: TextStyle(fontSize: 25)),
-                    Text("??? RAIN", style: TextStyle(fontSize: 25)),
-                  ],
-                )
-              )
             ],
           )
         )
@@ -152,7 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 50, 173, 230),
       appBar: AppBar(
         leading: Tooltip(
           message: "Frost Alert",
@@ -181,26 +220,23 @@ class _HomeScreenState extends State<HomeScreen> {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  Icon(
-                    Icons.sunny,
-                    size: 200,
-                    color: Colors.yellow,
-                  ),
+                  getWeatherIcon(),
                   Text(
                     "${currentWeather["temperature"].round()}°C",
-                    style: TextStyle(color: Colors.black, fontSize: 36),
+                    style: TextStyle(color: Colors.black, fontSize: 34),
                   )
                 ]
               ),
+              SizedBox(height: 20),
               Image.asset(
                 "assets/cycle.png",
                 width: 250
               ),
               Text(
-                "GOOD DAY FOR A RIDE!",
+                getCyclingText(),
                 style: TextStyle(color: Colors.black, fontSize: 24),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -215,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -254,25 +290,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.height * 0.15,
                     height: MediaQuery.of(context).size.height * 0.15,
                     child: Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Wrap(
-                              children: [
-                                Text("NO PRECIPITATION FOR AT LEAST 60 MINS", style: TextStyle(fontSize: 10)),
-                              ],
-                            ),
-                          ),
-                          Icon(
-                            Icons.auto_graph,
-                            size: 50, 
-                          ),
-                        ],
+                      child: Container(
+                        margin: EdgeInsets.all(7),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("PRECIPITATION", style: TextStyle(fontSize: 15)),
+                            SizedBox(height: 20),
+                            Text(getPercipitationText(), style: TextStyle(fontSize: 10)),
+                            SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     ),
-          
                   ),
                 ],
               ),
