@@ -191,21 +191,23 @@ class _HourDataState extends State<HourData>{
         ],),),
         Text("${widget.rainChance.toString()}%", style: TextStyle(fontSize: 20),),
         
-        Container(padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 16.0),
-          child: Column(children: [
-            Transform.rotate(angle: widget.windDir, child: SizedBox(
-                height: 60,
-                width: 40,
-                child: Stack(children: 
-                        [Align(alignment: Alignment(0.0,1.0), child: Icon(Icons.circle, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
-                        Align(alignment: Alignment(0.0,-1.0), child: Icon(Icons.north, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
-                        Align(alignment: Alignment(0.0, 0.5), child: Transform.rotate(angle: -widget.windDir, 
-                          child: Text(((widget.windSpeed*10.0).roundToDouble()/10.0).toString(), style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),))],),
-        ),),
-        Text(windCat, style: TextStyle(fontSize: 20.0),),
-        ],),),
+        Container(padding: EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 4.0),
+          child:
+            SizedBox(height: 120,
+              child: Column(children: [
+                Transform.rotate(angle: widget.windDir, child: SizedBox(
+                    height: 60,
+                    width: 40,
+                    child: Stack(children: 
+                            [Align(alignment: Alignment(0.0,1.0), child: Icon(Icons.circle, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
+                            Align(alignment: Alignment(0.0,-1.0), child: Icon(Icons.north, size: 40, color: Color.fromARGB(255, 0, 0, 0),)),
+                            Align(alignment: Alignment(0.0, 0.5), child: Transform.rotate(angle: -widget.windDir, 
+                              child: Text(((widget.windSpeed*10.0).roundToDouble()/10.0).toString(), style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),))],),
+            ),),
+            Text(windCat, style: TextStyle(fontSize: 20.0),),
+        ],),),),
 
-        Container(padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 16.0),
+        SizedBox(height: 95,
           child: Column(
             spacing: 5.0,
             children: [
