@@ -15,8 +15,12 @@ class WeatherService {
           WeatherCurrent.wind_speed_10m, 
           WeatherCurrent.wind_direction_10m,
           WeatherCurrent.wind_gusts_10m,
+          WeatherCurrent.precipitation,
+          WeatherCurrent.rain,
+          WeatherCurrent.showers,
+          WeatherCurrent.snowfall,
           WeatherCurrent.weather_code,
-          },
+        },
         daily: {
           WeatherDaily.temperature_2m_max,
           WeatherDaily.temperature_2m_min,
@@ -67,6 +71,10 @@ class WeatherService {
       'windDirectionOrdinal': getWindDirectionOrdinal(
         response.currentData[WeatherCurrent.wind_direction_10m]?.value ?? 0,
       ),
+      'precipitation': response.currentData[WeatherCurrent.precipitation]?.value,
+      'rain': response.currentData[WeatherCurrent.rain]?.value,
+      'showers': response.currentData[WeatherCurrent.showers]?.value,
+      'snowfall': response.currentData[WeatherCurrent.snowfall]?.value,
       'weatherCode': response.currentData[WeatherCurrent.weather_code]?.value,
     };
   }
@@ -148,5 +156,15 @@ class WeatherService {
     }
 
     return hourlyData;
+  }
+
+  int getNextPrecipitationIndex(ApiResponse<WeatherApi> response) {
+    final hourlyWeather = getHourlyWeather(response);
+    for (int i = 0; i < hourlyWeather.length; i++) {
+      if (hourlyWeather[i]['precipitationProbability'] > 0.5) {
+        return i;
+      }
+    }
+    return -1; // No precipitation found
   }
 }

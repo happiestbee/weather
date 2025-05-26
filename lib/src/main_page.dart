@@ -18,7 +18,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     Widget page;
     switch (selectedIndex){
       case 0:
@@ -52,10 +51,8 @@ class _MainPageState extends State<MainPage> {
           });
         },
       ),
-      body: Expanded(
-        child: Container(                  
-          child: page,
-        ),
+      body: Container( // ! removed Expanded widget here because it caused errors, is it necessary?
+        child: page,
       ),
     );  
   }
