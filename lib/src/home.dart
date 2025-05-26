@@ -173,118 +173,111 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                if (currentWeather["weather_code"] >= 50) 
-                  Icon(
-                    Icons.cloud,
-                    size: 200,
-                    color: Colors.grey,
-                  )
-                else 
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
                   Icon(
                     Icons.sunny,
                     size: 200,
                     color: Colors.yellow,
                   ),
-                Text(
-                  "${currentWeather["temperature"].round()}°C",
-                  style: TextStyle(color: Colors.black, fontSize: 36),
-                )
-              ]
-            ),
-            Image.asset(
-              "assets/cycle.png",
-              width: 250
-            ),
-            Text(
-              "GOOD DAY FOR A RIDE!",
-              style: TextStyle(color: Colors.black, fontSize: 24),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "HI: ${dailyWeather[0]["maxTemperature"].round()}°C",
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                ),
-                SizedBox(width: 20),
-                Text(
-                  "LO: ${dailyWeather[0]["minTemperature"].round()}°C",
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                )
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.height * 0.15,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: Card(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("WIND", style: TextStyle(fontSize: 18)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Transform.rotate(angle: getWindDirRadians(), child: SizedBox(
-                                height: 40,
-                                width: 40,
-                                child: Icon(Icons.north, size: 40, color: Color.fromARGB(255, 0, 0, 0),)
-                            ),),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                  Text(
+                    "${currentWeather["temperature"].round()}°C",
+                    style: TextStyle(color: Colors.black, fontSize: 36),
+                  )
+                ]
+              ),
+              Image.asset(
+                "assets/cycle.png",
+                width: 250
+              ),
+              Text(
+                "GOOD DAY FOR A RIDE!",
+                style: TextStyle(color: Colors.black, fontSize: 24),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "HI: ${dailyWeather[0]["maxTemperature"].round()}°C",
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                  SizedBox(width: 20),
+                  Text(
+                    "LO: ${dailyWeather[0]["minTemperature"].round()}°C",
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  )
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.height * 0.15,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    child: Card(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("WIND", style: TextStyle(fontSize: 18)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Transform.rotate(angle: getWindDirRadians(), child: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: Icon(Icons.north, size: 40, color: Color.fromARGB(255, 0, 0, 0),)
+                              ),),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text((currentWeather["windSpeed"].round()).toString(), style: TextStyle(fontSize: 24)),
+                                  Text("km/h"),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Text("$windCat WINDS, ${currentWeather["windDirectionOrdinal"]}", style: TextStyle(fontSize: 10)),
+                        ],
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.height * 0.15,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    child: Card(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Wrap(
                               children: [
-                                Text((currentWeather["windSpeed"].round()).toString(), style: TextStyle(fontSize: 24)),
-                                Text("km/h"),
+                                Text("NO PRECIPITATION FOR AT LEAST 60 MINS", style: TextStyle(fontSize: 10)),
                               ],
                             ),
-                          ],
-                        ),
-                        Text("$windCat WINDS, ${currentWeather["windDirectionOrdinal"]}", style: TextStyle(fontSize: 10)),
-                      ],
+                          ),
+                          Icon(
+                            Icons.auto_graph,
+                            size: 50, 
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                ),
-                SizedBox(width: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.height * 0.15,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: Card(
-                    child: Container(
-                      margin: EdgeInsets.all(7),
-                      child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        //   child: Wrap(
-                        //     children: [
-                        //       Text("NO PRECIPITATION FOR AT LEAST 60 MINS", style: TextStyle(fontSize: 10)),
-                        //     ],
-                        //   ),
-                        // ),
-                        Text("PRECIPITATION", style: TextStyle(fontSize: 15)),
-                        SizedBox(height: 20),
-                        Text(getPercipitationText(), style: TextStyle(fontSize: 10)),
-                        SizedBox(height: 20),
-                      ],
-                    )),
+          
                   ),
-
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         )
       )
     );
