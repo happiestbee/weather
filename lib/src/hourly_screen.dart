@@ -109,7 +109,7 @@ class _HourlyDisplayState extends State<HourlyDisplay>{
     //for (var i = 0; i < 24; i++) HourData(ind: i, rainChance: (i*i*widget.currentDay.x)%101, windDir: i.toDouble(), windSpeed: i.toDouble(), uvVal: (i*i*i)%10,),
 
     return SizedBox(
-      height: 500,
+      height: 400,
       child: ListView(
         itemExtent: 75,
         scrollDirection: Axis.horizontal,
