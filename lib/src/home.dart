@@ -70,14 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     var windCat = switch (currentWeather["windSpeed"]) {
-      >= 0 && < 7 => "still",
-      >= 7 && < 13 => "calm",
-      >= 13 && < 19 => "modest",
-      >= 19 && < 25 => "strong",
-      >= 25 && < 33 => "very strong",
-      >= 33 && < 41 => "risk",
-      >= 41 => "danger",
-      _ => "error",
+      >= 0 && < 7 => "STILL",
+      >= 7 && < 13 => "CALM",
+      >= 13 && < 19 => "MODEST",
+      >= 19 && < 25 => "STRONG",
+      >= 25 && < 33 => "VERY STRONG",
+      >= 33 && < 41 => "RISK",
+      >= 41 => "DANGER",
+      _ => "ERROR",
     };
 
     double getWindDirRadians() {
