@@ -109,12 +109,15 @@ class _HourlyDisplayState extends State<HourlyDisplay>{
     //for (var i = 0; i < 24; i++) HourData(ind: i, rainChance: (i*i*widget.currentDay.x)%101, windDir: i.toDouble(), windSpeed: i.toDouble(), uvVal: (i*i*i)%10,),
 
     return SizedBox(
-      height: 400,
-      child: ListView(
-        itemExtent: 75,
-        scrollDirection: Axis.horizontal,
-        children: 
-          cols,
+      height: 450,
+      child: DecoratedBox(
+        decoration: BoxDecoration(border: Border.symmetric(horizontal: BorderSide(color: Colors.white)), color: Color.fromARGB(19, 209, 238, 252),),
+        child: ListView(
+          itemExtent: 75,
+          scrollDirection: Axis.horizontal,
+          children: 
+            cols,
+        ),
       ),
     );
   }
@@ -183,7 +186,8 @@ class _HourDataState extends State<HourData>{
 
     return Column(
       children: [
-        Text("${widget.ind.toString().padLeft(2,'0')}:00", style: TextStyle(fontSize: 22),),
+        SizedBox(height: 7),
+        Text("${widget.ind.toString().padLeft(2,'0')}:00", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
         Container(padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
           child: Column(children: [
             Text("${((widget.temperature*10.0).roundToDouble()/10.0)}°C", style: TextStyle(fontSize: 20),),
@@ -204,15 +208,15 @@ class _HourDataState extends State<HourData>{
                             Align(alignment: Alignment(0.0, 0.5), child: Transform.rotate(angle: -widget.windDir, 
                               child: Text(((widget.windSpeed*10.0).roundToDouble()/10.0).toString(), style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),))],),
             ),),
-            Text(windCat, style: TextStyle(fontSize: 20.0),),
+            Text(windCat.toUpperCase(), style: TextStyle(fontSize: 16.0), textAlign: TextAlign.center,),
         ],),),),
 
-        SizedBox(height: 95,
+        SizedBox(height: 150,
           child: Column(
             spacing: 5.0,
             children: [
-            Text("UV-${(widget.uvVal*10.0).roundToDouble()/10.0}",style: TextStyle(fontSize: 20.0),),
-            Text("Cloud-${(widget.cloudCoverage*10.0).roundToDouble()/10.0}%", style: TextStyle(fontSize: 20.0),),
+            Text("UV\n${(widget.uvVal*10.0).roundToDouble()/10.0}",style: TextStyle(fontSize: 19.0), textAlign: TextAlign.center,),
+            Text("CLOUD\n${(widget.cloudCoverage*10.0).roundToDouble()/10.0}%", style: TextStyle(fontSize: 19.0), textAlign: TextAlign.center),
         ],),),
       ],
     );
@@ -325,14 +329,15 @@ class _DaySelectableState extends State<DaySelectable>{
         onPressed: () {updateOnSelect.setState(() {sd.x = ind;});},
         label: Center(
           child: Text(
-            "$weekDay, ${day.day}/${day.month}",
+            "$weekDay\n${day.day}/${day.month}",
             style: TextStyle(
-              color: Color(0xFFFFFFFF),
-              fontSize: 20.0
-            )
+              color: sd.x == ind ? Theme.of(context).primaryColor : Colors.white,
+              fontSize: 20.0,
+            ),
+            textAlign: TextAlign.center,
           )
         ),
-        style: ElevatedButton.styleFrom(backgroundColor: sd.x == ind ? Color(0xFF2255AA) : Color(0xFF5599FF)),
+        style: ElevatedButton.styleFrom(backgroundColor: sd.x == ind ? Colors.white : Color.fromARGB(60,209,238, 252)),
       );
   }
 }
